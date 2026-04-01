@@ -33,29 +33,75 @@ ON DUPLICATE KEY UPDATE
   fecha_actualizacion = NOW();
 
 -- Coherencia de planes base
-INSERT INTO planes (nombre, slug, descripcion_comercial, precio_mensual, descuento_anual_pct, precio_anual, duracion_dias, visible, destacado, recomendado, orden_visualizacion, insignia, resumen_comercial, color_visual, maximo_usuarios, usuarios_ilimitados, observaciones_internas, estado)
-VALUES
+CREATE TEMPORARY TABLE IF NOT EXISTS tmp_planes_base (
+  nombre VARCHAR(120) NOT NULL,
+  slug VARCHAR(150) NOT NULL,
+  descripcion_comercial TEXT NULL,
+  precio_mensual DECIMAL(12,2) NOT NULL,
+  descuento_anual_pct DECIMAL(5,2) NOT NULL,
+  precio_anual DECIMAL(12,2) NOT NULL,
+  duracion_dias INT NOT NULL,
+  visible TINYINT(1) NOT NULL,
+  destacado TINYINT(1) NOT NULL,
+  recomendado TINYINT(1) NOT NULL,
+  orden_visualizacion INT NOT NULL,
+  insignia VARCHAR(120) NULL,
+  resumen_comercial TEXT NULL,
+  color_visual VARCHAR(30) NULL,
+  maximo_usuarios INT NOT NULL,
+  usuarios_ilimitados TINYINT(1) NOT NULL,
+  observaciones_internas TEXT NULL,
+  estado VARCHAR(20) NOT NULL,
+  PRIMARY KEY (slug)
+);
+
+DELETE FROM tmp_planes_base;
+
+INSERT INTO tmp_planes_base (
+  nombre, slug, descripcion_comercial, precio_mensual, descuento_anual_pct, precio_anual,
+  duracion_dias, visible, destacado, recomendado, orden_visualizacion, insignia,
+  resumen_comercial, color_visual, maximo_usuarios, usuarios_ilimitados, observaciones_internas, estado
+) VALUES
 ('Básico', 'basico', 'Plan de entrada para operar cotizaciones y operación comercial inicial.', 15000, 10, 162000, 30, 1, 0, 0, 1, 'Inicial', 'Ideal para comenzar con operación comercial ordenada.', '#3b82f6', 2, 0, 'Plan inicial con alcance controlado.', 'activo'),
 ('Profesional', 'profesional', 'Plan recomendado para escalar ventas con inventario y control comercial.', 26000, 10, 280800, 30, 1, 1, 1, 2, 'Más elegido', 'Incluye inventario completo, seguimiento y analítica base.', '#0ea5a4', 8, 0, 'Plan recomendado para la mayoría de empresas.', 'activo'),
-('Empresa', 'empresa', 'Plan avanzado para operación integral con mayor capacidad y control.', 55000, 15, 561000, 30, 1, 1, 0, 3, 'Escalable', 'Acceso completo a módulos y operación multiusuario.', '#7c3aed', 0, 1, 'Plan corporativo con usuarios ilimitados.', 'activo')
-ON DUPLICATE KEY UPDATE
-  nombre = VALUES(nombre),
-  descripcion_comercial = VALUES(descripcion_comercial),
-  precio_mensual = VALUES(precio_mensual),
-  descuento_anual_pct = VALUES(descuento_anual_pct),
-  precio_anual = VALUES(precio_anual),
-  visible = VALUES(visible),
-  destacado = VALUES(destacado),
-  recomendado = VALUES(recomendado),
-  orden_visualizacion = VALUES(orden_visualizacion),
-  insignia = VALUES(insignia),
-  resumen_comercial = VALUES(resumen_comercial),
-  color_visual = VALUES(color_visual),
-  maximo_usuarios = VALUES(maximo_usuarios),
-  usuarios_ilimitados = VALUES(usuarios_ilimitados),
-  observaciones_internas = VALUES(observaciones_internas),
-  estado = VALUES(estado),
-  fecha_actualizacion = NOW();
+('Empresa', 'empresa', 'Plan avanzado para operación integral con mayor capacidad y control.', 55000, 15, 561000, 30, 1, 1, 0, 3, 'Escalable', 'Acceso completo a módulos y operación multiusuario.', '#7c3aed', 0, 1, 'Plan corporativo con usuarios ilimitados.', 'activo');
+
+INSERT INTO planes (
+  nombre, slug, descripcion_comercial, precio_mensual, descuento_anual_pct, precio_anual,
+  duracion_dias, visible, destacado, recomendado, orden_visualizacion, insignia,
+  resumen_comercial, color_visual, maximo_usuarios, usuarios_ilimitados, observaciones_internas, estado
+)
+SELECT
+  t.nombre, t.slug, t.descripcion_comercial, t.precio_mensual, t.descuento_anual_pct, t.precio_anual,
+  t.duracion_dias, t.visible, t.destacado, t.recomendado, t.orden_visualizacion, t.insignia,
+  t.resumen_comercial, t.color_visual, t.maximo_usuarios, t.usuarios_ilimitados, t.observaciones_internas, t.estado 
+FROM tmp_planes_base t 
+LEFT JOIN planes p ON p.slug = t.slug 
+WHERE p.id IS NULL;
+
+UPDATE planes p
+INNER JOIN tmp_planes_base t ON t.slug = p.slug
+SET
+  p.nombre = t.nombre,
+  p.descripcion_comercial = t.descripcion_comercial,
+  p.precio_mensual = t.precio_mensual,
+  p.descuento_anual_pct = t.descuento_anual_pct,
+  p.precio_anual = t.precio_anual,
+  p.duracion_dias = t.duracion_dias,
+  p.visible = t.visible,
+  p.destacado = t.destacado,
+  p.recomendado = t.recomendado,
+  p.orden_visualizacion = t.orden_visualizacion,
+  p.insignia = t.insignia,
+  p.resumen_comercial = t.resumen_comercial,
+  p.color_visual = t.color_visual,
+  p.maximo_usuarios = t.maximo_usuarios,
+  p.usuarios_ilimitados = t.usuarios_ilimitados,
+  p.observaciones_internas = t.observaciones_internas,
+  p.estado = t.estado,
+  p.fecha_actualizacion = NOW();
+
+DROP TEMPORARY TABLE IF EXISTS tmp_planes_base;
 
 -- Matriz inicial de módulos por plan (idempotente)
 INSERT INTO plan_funcionalidades (plan_id, funcionalidad_id, activo, valor_numerico, es_ilimitado, fecha_actualizacion)
