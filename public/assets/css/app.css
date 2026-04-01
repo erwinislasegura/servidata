@@ -14,3 +14,12 @@ body { font-family: Inter, Segoe UI, sans-serif; }
   min-height: 480px;
 }
 .login-form .form-control { border-radius: .65rem; }
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.status-dot.online { background: #16a34a; box-shadow: 0 0 0 3px rgba(22,163,74,.2); }
+.status-dot.offline { background: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,.2); }

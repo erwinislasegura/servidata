@@ -22,6 +22,10 @@
               <?php if ($f = get_flash()): ?>
                 <div class="alert alert-<?= e($f['type']) ?>"><?= e($f['message']) ?></div>
               <?php endif; ?>
+              <div class="db-status mb-3 d-flex align-items-center gap-2">
+                <span class="status-dot <?= !empty($dbConnected) ? 'online' : 'offline' ?>"></span>
+                <small class="text-muted">Base de datos: <strong><?= !empty($dbConnected) ? 'Conectada' : 'Sin conexión' ?></strong></small>
+              </div>
               <form method="post" action="<?= url('/login') ?>" class="login-form">
                 <?= csrf_field() ?>
                 <div class="mb-3">
