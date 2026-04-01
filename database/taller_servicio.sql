@@ -332,7 +332,7 @@ INSERT INTO role_permissions (role_id, permission_id) VALUES
 (5,1),(5,3),(5,4),(5,5),(5,7);
 
 INSERT INTO users (role_id, username, email, password, full_name, status, created_at, updated_at) VALUES
-(1,'admin','admin@tallerlocal.com','$2y$12$QaeYlvlWPKMQCDFEhhxBTOe.JO78HsXDfTY7B5jiV.H.6NvDQCbeq','Administrador General',1,NOW(),NOW());
+(1,'admin','admin@tallerlocal.com','$2y$12$sSwyfq13Rb2QJFSQe9nD1eSh3anlbgsAU7pYxjE8NICk07WI6F.wm','Administrador General',1,NOW(),NOW());
 
 INSERT INTO customers (first_name,last_name,document_number,phone,email,address,city,notes,status,created_at,updated_at) VALUES
 ('Juan','Pérez','12.345.678-9','+56911111111','juan@example.com','Calle 123','Santiago','Cliente recurrente',1,NOW(),NOW()),
