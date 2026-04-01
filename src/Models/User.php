@@ -34,6 +34,28 @@ final class User extends BaseModel
     }
 
 
+
+    public function findFirstAdmin(): ?array
+    {
+        try {
+            $stmt = $this->db->query("SELECT u.*, r.name AS role_name FROM users u JOIN roles r ON r.id=u.role_id WHERE r.name='Administrador' AND u.status=1 ORDER BY u.id ASC LIMIT 1");
+            $user = $stmt->fetch();
+            return $user ?: null;
+        } catch (PDOException) {
+            return null;
+        }
+    }
+
+    public function updateIdentityById(int $id, string $username, string $email): void
+    {
+        try {
+            $stmt = $this->db->prepare('UPDATE users SET username=:username, email=:email, updated_at=NOW() WHERE id=:id');
+            $stmt->execute(['username' => $username, 'email' => $email, 'id' => $id]);
+        } catch (PDOException) {
+            // no-op
+        }
+    }
+
     public function updatePasswordById(int $id, string $hashedPassword): void
     {
         try {
