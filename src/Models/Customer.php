@@ -22,9 +22,10 @@ final class Customer extends BaseModel
         return $stmt->fetchAll();
     }
 
-    public function create(array $data): void
+    public function create(array $data): int
     {
         $stmt = $this->db->prepare('INSERT INTO customers (first_name,last_name,document_number,phone,email,address,city,notes,status,created_at,updated_at) VALUES (:first_name,:last_name,:document_number,:phone,:email,:address,:city,:notes,:status,NOW(),NOW())');
         $stmt->execute($data);
+        return (int) $this->db->lastInsertId();
     }
 }
