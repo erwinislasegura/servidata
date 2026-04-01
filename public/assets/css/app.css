@@ -13,19 +13,7 @@ body {
   color: var(--text-main);
 }
 
-body > .d-flex {
-  display: flex !important;
-  min-height: 100vh;
-  align-items: stretch;
-}
-
-body > .d-flex > main {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
 .sidebar {
-  display: block !important;
   width: 270px;
   min-width: 270px;
   background: var(--panel-bg);
