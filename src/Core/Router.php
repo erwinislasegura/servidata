@@ -26,6 +26,10 @@ final class Router
     public function dispatch(string $method, string $uri): void
     {
         $path = parse_url($uri, PHP_URL_PATH) ?: '/';
+        $basePath = base_path_url();
+        if ($basePath !== '' && str_starts_with($path, $basePath)) {
+            $path = substr($path, strlen($basePath)) ?: '/';
+        }
         $path = $this->normalizePath($path);
         $method = strtoupper($method) === 'HEAD' ? 'GET' : strtoupper($method);
 
@@ -38,7 +42,7 @@ final class Router
         }
 
         if ($route['auth'] && !Auth::check()) {
-            header('Location: /login');
+            header('Location: ' . url('/login'));
             return;
         }
 
