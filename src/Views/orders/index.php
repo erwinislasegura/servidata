@@ -1,9 +1,37 @@
 <style>
+  .orders-form-compact { font-size: .9rem; }
   .orders-form-compact .form-label { margin-bottom: .2rem; font-size: .82rem; }
   .orders-form-compact .form-control,
   .orders-form-compact .form-select { min-height: calc(1.5em + .45rem + 2px); padding: .2rem .45rem; font-size: .9rem; }
   .orders-form-compact textarea.form-control { min-height: 58px; }
+  .orders-form-compact .btn { padding: .32rem .55rem; font-size: .86rem; }
   .customer-preview-item { font-size: .86rem; margin-bottom: .15rem; }
+  .customer-preview-box { border: 1px solid #d9dce2; border-radius: .35rem; padding: .45rem; background: #f7f8fa; }
+  .icon-btn { border: 0; background: transparent; color: #0d6efd; font-size: .82rem; padding: 0; cursor: pointer; }
+  .icon-btn:hover { text-decoration: underline; }
+
+  .simple-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(19, 28, 45, .48);
+    z-index: 9999;
+    padding: 1rem;
+    overflow: auto;
+  }
+  .simple-modal.show { display: block; }
+  .simple-modal-dialog {
+    width: min(860px, 100%);
+    margin: 2rem auto;
+    background: #fff;
+    border-radius: .5rem;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, .18);
+    border: 1px solid #d8dde6;
+  }
+  .simple-modal-header, .simple-modal-footer { padding: .6rem .8rem; border-bottom: 1px solid #e7eaf0; }
+  .simple-modal-footer { border-bottom: 0; border-top: 1px solid #e7eaf0; display: flex; justify-content: flex-end; gap: .45rem; }
+  .simple-modal-body { padding: .8rem; }
+  .simple-close { border: 0; background: transparent; font-size: 1.2rem; line-height: 1; cursor: pointer; }
 </style>
 
 <h5 class="mb-3">Nueva Orden de Servicio (rápida de mostrador)</h5>
@@ -19,7 +47,7 @@
       <div class="col-md-4">
         <label class="form-label d-flex justify-content-between align-items-center">
           <span>Cliente existente</span>
-          <button class="btn btn-link btn-sm p-0 text-decoration-none" type="button" data-bs-toggle="modal" data-bs-target="#newCustomerModal" title="Nuevo cliente">
+          <button class="icon-btn" id="open_new_customer_modal" type="button" title="Nuevo cliente">
             <i class="bi bi-person-plus"></i> Nuevo
           </button>
         </label>
@@ -42,7 +70,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Datos del cliente seleccionado</label>
-        <div id="customer_preview" class="border rounded p-2 bg-light-subtle">
+        <div id="customer_preview" class="customer-preview-box">
           <div class="customer-preview-item text-muted">Selecciona un cliente para ver sus datos.</div>
         </div>
       </div>
@@ -107,34 +135,32 @@
   </div>
 </div>
 
-<div class="modal fade" id="newCustomerModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header py-2">
-        <h6 class="modal-title mb-0">Nuevo cliente</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <form id="new_customer_form">
-        <div class="modal-body py-2">
-          <input type="hidden" name="csrf_token" value="<?= e((string) csrf_token()) ?>">
-          <div class="row g-2 orders-form-compact">
-            <div class="col-md-4"><label class="form-label">Nombres</label><input required name="first_name" class="form-control"></div>
-            <div class="col-md-4"><label class="form-label">Apellidos</label><input required name="last_name" class="form-control"></div>
-            <div class="col-md-4"><label class="form-label">RUT</label><input name="document_number" class="form-control"></div>
-            <div class="col-md-4"><label class="form-label">Teléfono</label><input name="phone" class="form-control"></div>
-            <div class="col-md-4"><label class="form-label">Correo</label><input name="email" type="email" class="form-control"></div>
-            <div class="col-md-4"><label class="form-label">Ciudad</label><input name="city" class="form-control"></div>
-            <div class="col-md-6"><label class="form-label">Dirección</label><input name="address" class="form-control"></div>
-            <div class="col-md-6"><label class="form-label">Notas</label><input name="notes" class="form-control"></div>
-          </div>
-          <div id="new_customer_feedback" class="small mt-2"></div>
-        </div>
-        <div class="modal-footer py-2">
-          <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-save"></i> Guardar cliente</button>
-        </div>
-      </form>
+<div class="simple-modal" id="newCustomerModal" aria-hidden="true">
+  <div class="simple-modal-dialog">
+    <div class="simple-modal-header d-flex justify-content-between align-items-center">
+      <h6 class="mb-0">Nuevo cliente</h6>
+      <button type="button" class="simple-close" id="close_new_customer_modal" aria-label="Cerrar">×</button>
     </div>
+    <form id="new_customer_form">
+      <div class="simple-modal-body">
+        <input type="hidden" name="csrf_token" value="<?= e((string) csrf_token()) ?>">
+        <div class="row g-2 orders-form-compact">
+          <div class="col-md-4"><label class="form-label">Nombres</label><input required name="first_name" class="form-control"></div>
+          <div class="col-md-4"><label class="form-label">Apellidos</label><input required name="last_name" class="form-control"></div>
+          <div class="col-md-4"><label class="form-label">RUT</label><input name="document_number" class="form-control"></div>
+          <div class="col-md-4"><label class="form-label">Teléfono</label><input name="phone" class="form-control"></div>
+          <div class="col-md-4"><label class="form-label">Correo</label><input name="email" type="email" class="form-control"></div>
+          <div class="col-md-4"><label class="form-label">Ciudad</label><input name="city" class="form-control"></div>
+          <div class="col-md-6"><label class="form-label">Dirección</label><input name="address" class="form-control"></div>
+          <div class="col-md-6"><label class="form-label">Notas</label><input name="notes" class="form-control"></div>
+        </div>
+        <div id="new_customer_feedback" class="small mt-2"></div>
+      </div>
+      <div class="simple-modal-footer">
+          <button type="button" class="btn btn-outline-secondary btn-sm" id="cancel_new_customer_modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-save"></i> Guardar cliente</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -146,6 +172,10 @@
     const customerPreview = document.getElementById('customer_preview');
     const newCustomerForm = document.getElementById('new_customer_form');
     const feedback = document.getElementById('new_customer_feedback');
+    const modal = document.getElementById('newCustomerModal');
+    const openModalBtn = document.getElementById('open_new_customer_modal');
+    const closeModalBtn = document.getElementById('close_new_customer_modal');
+    const cancelModalBtn = document.getElementById('cancel_new_customer_modal');
 
     if (!orderForm || !customerSelect || !customerPreview) return;
 
@@ -178,6 +208,20 @@
     });
 
     customerSelect.addEventListener('change', renderCustomerPreview);
+
+    const toggleModal = (show) => {
+      if (!modal) return;
+      modal.classList.toggle('show', show);
+      modal.setAttribute('aria-hidden', show ? 'false' : 'true');
+      document.body.style.overflow = show ? 'hidden' : '';
+    };
+
+    openModalBtn?.addEventListener('click', () => toggleModal(true));
+    closeModalBtn?.addEventListener('click', () => toggleModal(false));
+    cancelModalBtn?.addEventListener('click', () => toggleModal(false));
+    modal?.addEventListener('click', (event) => {
+      if (event.target === modal) toggleModal(false);
+    });
 
     orderForm.addEventListener('submit', (event) => {
       if (!customerSelect.value) {
@@ -222,10 +266,7 @@
           feedback.textContent = 'Cliente creado correctamente.';
           newCustomerForm.reset();
 
-          const modalEl = document.getElementById('newCustomerModal');
-          if (window.bootstrap?.Modal && modalEl) {
-            window.bootstrap.Modal.getOrCreateInstance(modalEl).hide();
-          }
+          toggleModal(false);
         } catch (error) {
           feedback.className = 'small mt-2 text-danger';
           feedback.textContent = error.message || 'Error al guardar cliente.';
