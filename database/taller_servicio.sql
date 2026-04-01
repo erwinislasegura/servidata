@@ -1,14 +1,39 @@
 CREATE DATABASE IF NOT EXISTS taller_servicio CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE taller_servicio;
 
-CREATE TABLE roles (
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS audit_logs;
+DROP TABLE IF EXISTS receipts;
+DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS inventory_movements;
+DROP TABLE IF EXISTS inventory_items;
+DROP TABLE IF EXISTS suppliers;
+DROP TABLE IF EXISTS quotation_items;
+DROP TABLE IF EXISTS quotations;
+DROP TABLE IF EXISTS diagnostics;
+DROP TABLE IF EXISTS service_order_status_history;
+DROP TABLE IF EXISTS service_orders;
+DROP TABLE IF EXISTS service_statuses;
+DROP TABLE IF EXISTS device_photos;
+DROP TABLE IF EXISTS devices;
+DROP TABLE IF EXISTS technicians;
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS role_permissions;
+DROP TABLE IF EXISTS permissions;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS settings;
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+CREATE TABLE IF NOT EXISTS roles (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(50) NOT NULL UNIQUE,
   created_at TIMESTAMP NULL,
   updated_at TIMESTAMP NULL
 );
 
-CREATE TABLE permissions (
+CREATE TABLE IF NOT EXISTS permissions (
   id INT AUTO_INCREMENT PRIMARY KEY,
   key_name VARCHAR(80) NOT NULL UNIQUE,
   label VARCHAR(120) NOT NULL,
@@ -16,7 +41,7 @@ CREATE TABLE permissions (
   updated_at TIMESTAMP NULL
 );
 
-CREATE TABLE role_permissions (
+CREATE TABLE IF NOT EXISTS role_permissions (
   role_id INT NOT NULL,
   permission_id INT NOT NULL,
   PRIMARY KEY(role_id, permission_id),
@@ -24,7 +49,7 @@ CREATE TABLE role_permissions (
   CONSTRAINT fk_rp_permission FOREIGN KEY (permission_id) REFERENCES permissions(id)
 );
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   role_id INT NOT NULL,
   username VARCHAR(60) NOT NULL UNIQUE,
@@ -39,7 +64,7 @@ CREATE TABLE users (
   CONSTRAINT fk_users_role FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
-CREATE TABLE customers (
+CREATE TABLE IF NOT EXISTS customers (
   id INT AUTO_INCREMENT PRIMARY KEY,
   first_name VARCHAR(80) NOT NULL,
   last_name VARCHAR(80) NOT NULL,
@@ -57,7 +82,7 @@ CREATE TABLE customers (
   INDEX idx_customer_phone (phone)
 );
 
-CREATE TABLE technicians (
+CREATE TABLE IF NOT EXISTS technicians (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NULL,
   first_name VARCHAR(80) NOT NULL,
@@ -73,7 +98,7 @@ CREATE TABLE technicians (
   CONSTRAINT fk_technicians_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE devices (
+CREATE TABLE IF NOT EXISTS devices (
   id INT AUTO_INCREMENT PRIMARY KEY,
   customer_id INT NOT NULL,
   device_type ENUM('computador','notebook','impresora','celular','tablet','otro') NOT NULL,
@@ -97,7 +122,7 @@ CREATE TABLE devices (
   CONSTRAINT fk_devices_customer FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
 
-CREATE TABLE device_photos (
+CREATE TABLE IF NOT EXISTS device_photos (
   id INT AUTO_INCREMENT PRIMARY KEY,
   device_id INT NOT NULL,
   photo_path VARCHAR(255) NOT NULL,
@@ -106,7 +131,7 @@ CREATE TABLE device_photos (
   CONSTRAINT fk_device_photos_device FOREIGN KEY (device_id) REFERENCES devices(id)
 );
 
-CREATE TABLE service_statuses (
+CREATE TABLE IF NOT EXISTS service_statuses (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(80) NOT NULL UNIQUE,
   color VARCHAR(20) DEFAULT 'secondary',
@@ -116,7 +141,7 @@ CREATE TABLE service_statuses (
   updated_at TIMESTAMP NULL
 );
 
-CREATE TABLE service_orders (
+CREATE TABLE IF NOT EXISTS service_orders (
   id INT AUTO_INCREMENT PRIMARY KEY,
   order_number VARCHAR(25) NOT NULL UNIQUE,
   public_tracking_code VARCHAR(50) NOT NULL UNIQUE,
@@ -148,7 +173,7 @@ CREATE TABLE service_orders (
   INDEX idx_orders_status (current_status_id)
 );
 
-CREATE TABLE service_order_status_history (
+CREATE TABLE IF NOT EXISTS service_order_status_history (
   id INT AUTO_INCREMENT PRIMARY KEY,
   service_order_id INT NOT NULL,
   order_number VARCHAR(25) NOT NULL,
@@ -164,7 +189,7 @@ CREATE TABLE service_order_status_history (
   INDEX idx_history_order (service_order_id, changed_at)
 );
 
-CREATE TABLE diagnostics (
+CREATE TABLE IF NOT EXISTS diagnostics (
   id INT AUTO_INCREMENT PRIMARY KEY,
   service_order_id INT NOT NULL,
   technician_id INT NOT NULL,
@@ -186,7 +211,7 @@ CREATE TABLE diagnostics (
   CONSTRAINT fk_diagnostics_technician FOREIGN KEY (technician_id) REFERENCES technicians(id)
 );
 
-CREATE TABLE quotations (
+CREATE TABLE IF NOT EXISTS quotations (
   id INT AUTO_INCREMENT PRIMARY KEY,
   quote_number VARCHAR(25) NOT NULL UNIQUE,
   service_order_id INT NOT NULL,
@@ -203,7 +228,7 @@ CREATE TABLE quotations (
   CONSTRAINT fk_quotations_order FOREIGN KEY (service_order_id) REFERENCES service_orders(id)
 );
 
-CREATE TABLE quotation_items (
+CREATE TABLE IF NOT EXISTS quotation_items (
   id INT AUTO_INCREMENT PRIMARY KEY,
   quotation_id INT NOT NULL,
   description VARCHAR(255) NOT NULL,
@@ -214,7 +239,7 @@ CREATE TABLE quotation_items (
   CONSTRAINT fk_quote_items_quote FOREIGN KEY (quotation_id) REFERENCES quotations(id)
 );
 
-CREATE TABLE suppliers (
+CREATE TABLE IF NOT EXISTS suppliers (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(120) NOT NULL,
   phone VARCHAR(40),
@@ -225,7 +250,7 @@ CREATE TABLE suppliers (
   updated_at TIMESTAMP NULL
 );
 
-CREATE TABLE inventory_items (
+CREATE TABLE IF NOT EXISTS inventory_items (
   id INT AUTO_INCREMENT PRIMARY KEY,
   supplier_id INT NULL,
   name VARCHAR(120) NOT NULL,
@@ -244,7 +269,7 @@ CREATE TABLE inventory_items (
   CONSTRAINT fk_inventory_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
 );
 
-CREATE TABLE inventory_movements (
+CREATE TABLE IF NOT EXISTS inventory_movements (
   id INT AUTO_INCREMENT PRIMARY KEY,
   inventory_item_id INT NOT NULL,
   service_order_id INT NULL,
@@ -260,7 +285,7 @@ CREATE TABLE inventory_movements (
   CONSTRAINT fk_moves_user FOREIGN KEY (moved_by_user_id) REFERENCES users(id)
 );
 
-CREATE TABLE payments (
+CREATE TABLE IF NOT EXISTS payments (
   id INT AUTO_INCREMENT PRIMARY KEY,
   service_order_id INT NOT NULL,
   paid_at DATETIME NOT NULL,
@@ -274,7 +299,7 @@ CREATE TABLE payments (
   CONSTRAINT fk_payments_user FOREIGN KEY (created_by_user_id) REFERENCES users(id)
 );
 
-CREATE TABLE receipts (
+CREATE TABLE IF NOT EXISTS receipts (
   id INT AUTO_INCREMENT PRIMARY KEY,
   service_order_id INT NOT NULL,
   receipt_type ENUM('recepcion','diagnostico','cotizacion','pago','entrega') NOT NULL,
@@ -287,7 +312,7 @@ CREATE TABLE receipts (
   CONSTRAINT fk_receipts_user FOREIGN KEY (issued_by_user_id) REFERENCES users(id)
 );
 
-CREATE TABLE settings (
+CREATE TABLE IF NOT EXISTS settings (
   id INT AUTO_INCREMENT PRIMARY KEY,
   `key` VARCHAR(120) NOT NULL UNIQUE,
   `value` TEXT,
@@ -296,7 +321,7 @@ CREATE TABLE settings (
   updated_at TIMESTAMP NULL
 );
 
-CREATE TABLE audit_logs (
+CREATE TABLE IF NOT EXISTS audit_logs (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NULL,
   action VARCHAR(120) NOT NULL,

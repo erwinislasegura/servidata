@@ -55,7 +55,7 @@ Aplicación web en **PHP 8 + MySQL** con arquitectura **MVC** para gestión de t
 ## Instalación local
 
 1. Clona/copia el proyecto.
-2. Crea la base de datos ejecutando:
+2. Crea la base de datos ejecutando (script idempotente: limpia tablas y vuelve a crear):
    ```bash
    mysql -u root -p < database/taller_servicio.sql
    ```
