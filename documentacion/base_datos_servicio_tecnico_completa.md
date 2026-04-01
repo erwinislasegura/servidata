@@ -1,32 +1,33 @@
-# Base de datos FULL (lista para cargar)
+# Base de datos FULL (sin errores) para montar y usar
 
-Si quieres **llegar y cargar en un solo paso**, usa este archivo:
+Para dejar todo listo (tablas + actualizaciones + usuarios root) usa el instalador automático:
 
-- `base_datos/instalacion/base_datos_full_servicio_tecnico.sql`
+```bash
+php scripts/instalar_base_datos_full_tallerlocal.php
+```
 
-Incluye todo:
-1. Esquema base SaaS
-2. Semillas base
-3. Datos demo
-4. Todas las actualizaciones de `base_datos/actualizaciones`
-   - incluido módulo Servicio Técnico (`st_*`)
-   - incluido root cliente `admin@tallerlocal.com`
+Este instalador aplica, en orden:
+1. `base_datos/esquema/esquema.sql`
+2. `base_datos/esquema/semillas.sql`
+3. `base_datos/esquema/datos_demo.sql`
+4. Todas las actualizaciones de `base_datos/actualizaciones/*.sql`
 
-## Carga directa (1 comando)
+Además valida al final:
+- Tabla `st_clientes`
+- Tabla `st_ordenes`
+- Usuario root activo `root@tallerlocal.com`
+- Usuario admin activo `admin@tallerlocal.com`
+
+## Credenciales root iniciales
+- Root plataforma: `root@tallerlocal.com`
+- Admin cliente: `admin@tallerlocal.com`
+- Password inicial (ambos): `Admin123*`
+
+## Opción alternativa (SQL único)
+Si prefieres importar un solo archivo:
+
 ```bash
 mysql -u TU_USUARIO -p TU_BASE < base_datos/instalacion/base_datos_full_servicio_tecnico.sql
 ```
 
-## Credenciales iniciales cliente
-- Usuario: `admin`
-- Email: `admin@tallerlocal.com`
-- Password: `Admin123*`
-
-## Verificación rápida
-```sql
-SELECT id, nombre, correo, estado
-FROM usuarios
-WHERE correo = 'admin@tallerlocal.com';
-```
-
-> Nota: el SQL FULL está preparado para instalación genérica (se removieron `USE ...` hardcodeados).
+> Recomendado: usar el instalador PHP para validar automáticamente y evitar errores de carga.

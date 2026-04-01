@@ -1,5 +1,5 @@
 -- SQL FULL AUTOGENERADO: Servicio Técnico
--- Generado: 2026-04-01 04:46:09 UTC
+-- Generado: 2026-04-01 04:56:35 UTC
 -- Incluye: esquema base + semillas + datos_demo + todas las actualizaciones
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -2023,6 +2023,44 @@ SET @sql = IF(
   'ALTER TABLE usuarios ADD COLUMN biografia TEXT NULL AFTER cargo',
   'SELECT 1'
 ); PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- ==================================================
+-- SOURCE: base_datos/actualizaciones/actualizacion_usuarios_root_tallerlocal.sql
+-- ==================================================
+-- Usuarios root para instalación inicial sin fricción
+SET @hash_root = '$2y$12$zh8NzBuzvus1gxOO5mQnmuUA8i3jHJb3WLBWjHXrSZk3mIDtPWPKG'; -- Admin123*
+
+SET @rol_superadmin = (SELECT id FROM roles WHERE codigo = 'superadministrador' LIMIT 1);
+SET @rol_admin_empresa = (SELECT id FROM roles WHERE codigo = 'administrador_empresa' LIMIT 1);
+
+INSERT INTO usuarios (empresa_id, rol_id, nombre, correo, password, cargo, estado, fecha_creacion)
+SELECT NULL, @rol_superadmin, 'root', 'root@tallerlocal.com', @hash_root, 'Superadministrador', 'activo', NOW()
+WHERE NOT EXISTS (SELECT 1 FROM usuarios WHERE correo = 'root@tallerlocal.com');
+
+UPDATE usuarios
+SET rol_id = @rol_superadmin,
+    nombre = 'root',
+    password = @hash_root,
+    cargo = 'Superadministrador',
+    estado = 'activo',
+    fecha_eliminacion = NULL
+WHERE correo = 'root@tallerlocal.com';
+
+SET @empresa_tallerlocal = (SELECT id FROM empresas WHERE correo = 'admin@tallerlocal.com' LIMIT 1);
+
+INSERT INTO usuarios (empresa_id, rol_id, nombre, correo, password, cargo, estado, fecha_creacion)
+SELECT @empresa_tallerlocal, @rol_admin_empresa, 'admin', 'admin@tallerlocal.com', @hash_root, 'Administrador General', 'activo', NOW()
+WHERE NOT EXISTS (SELECT 1 FROM usuarios WHERE correo = 'admin@tallerlocal.com');
+
+UPDATE usuarios
+SET empresa_id = @empresa_tallerlocal,
+    rol_id = @rol_admin_empresa,
+    nombre = 'admin',
+    password = @hash_root,
+    cargo = 'Administrador General',
+    estado = 'activo',
+    fecha_eliminacion = NULL
+WHERE correo = 'admin@tallerlocal.com';
 
 -- ==================================================
 -- SOURCE: base_datos/actualizaciones/actualizacion_usuarios_superadmin_admin_cliente.sql

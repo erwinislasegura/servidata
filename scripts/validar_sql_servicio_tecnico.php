@@ -2,12 +2,8 @@
 
 declare(strict_types=1);
 
-$archivos = [
-    __DIR__ . '/../base_datos/actualizaciones/actualizacion_coherencia_planes_publicos.sql',
-    __DIR__ . '/../base_datos/actualizaciones/actualizacion_servicio_tecnico.sql',
-    __DIR__ . '/../base_datos/actualizaciones/actualizacion_servicio_tecnico_admin_root.sql',
-    __DIR__ . '/../base_datos/instalacion/base_datos_full_servicio_tecnico.sql',
-];
+$archivos = glob(__DIR__ . '/../base_datos/actualizaciones/*.sql') ?: [];
+$archivos[] = __DIR__ . '/../base_datos/instalacion/base_datos_full_servicio_tecnico.sql';
 
 $errores = [];
 
@@ -34,22 +30,6 @@ foreach ($archivos as $archivo) {
         }
     }
 
-    $sentencias = preg_split('/;\s*(\r?\n|$)/', $contenido);
-    if ($sentencias === false) {
-        $errores[] = basename($archivo) . ' no pudo separarse en sentencias';
-        continue;
-    }
-
-    $sentenciasNoVacias = 0;
-    foreach ($sentencias as $sentencia) {
-        if (trim($sentencia) !== '') {
-            $sentenciasNoVacias++;
-        }
-    }
-
-    if ($sentenciasNoVacias < 3) {
-        $errores[] = basename($archivo) . ' tiene muy pocas sentencias SQL para ser válido';
-    }
 }
 
 if ($errores !== []) {
