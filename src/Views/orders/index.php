@@ -1,4 +1,52 @@
 <style>
+  /* Fallback visual layer when Bootstrap CSS is not available */
+  .card { border: 1px solid #d9dce2; border-radius: .45rem; background: #fff; margin-bottom: 1rem; }
+  .card-body { padding: .75rem; }
+  .border-bottom { border-bottom: 1px solid #e5e7eb; }
+  .rounded { border-radius: .35rem; }
+  .p-2 { padding: .5rem; }
+  .mb-0 { margin-bottom: 0; }
+  .mb-2 { margin-bottom: .5rem; }
+  .mb-3 { margin-bottom: .8rem; }
+  .mb-4 { margin-bottom: 1rem; }
+  .mt-2 { margin-top: .5rem; }
+  .pb-2 { padding-bottom: .5rem; }
+  .d-flex { display: flex; }
+  .justify-content-between { justify-content: space-between; }
+  .align-items-center { align-items: center; }
+  .gap-2 { gap: .5rem; }
+  .w-auto { width: auto; }
+  .text-muted { color: #6b7280; }
+  .small { font-size: .82rem; }
+
+  .row { display: flex; flex-wrap: wrap; margin: -.35rem; }
+  .row > [class*="col-"] { padding: .35rem; box-sizing: border-box; width: 100%; }
+  .col-12 { width: 100% !important; }
+  @media (min-width: 768px) {
+    .col-md-2 { width: 16.6667% !important; }
+    .col-md-3 { width: 25% !important; }
+    .col-md-4 { width: 33.3333% !important; }
+    .col-md-6 { width: 50% !important; }
+  }
+
+  .form-control, .form-select {
+    display: block;
+    width: 100%;
+    border: 1px solid #b9c0cb;
+    border-radius: .35rem;
+    padding: .35rem .5rem;
+    background: #fff;
+    color: #111827;
+  }
+  .form-check { display: inline-flex; align-items: center; gap: .25rem; margin-right: .6rem; }
+  .btn { border: 1px solid #b9c0cb; border-radius: .35rem; background: #f8f9fb; color: #111827; cursor: pointer; }
+  .btn-primary { background: #0d6efd; border-color: #0d6efd; color: #fff; }
+  .btn-outline-secondary { background: #fff; border-color: #9ca3af; color: #374151; }
+
+  .table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  .table th, .table td { border-bottom: 1px solid #e5e7eb; padding: .4rem; text-align: left; }
+  .table-responsive { overflow-x: auto; }
+
   .orders-form-compact { font-size: .9rem; }
   .orders-form-compact .form-label { margin-bottom: .2rem; font-size: .82rem; }
   .orders-form-compact .form-control,
