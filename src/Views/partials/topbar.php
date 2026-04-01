@@ -6,7 +6,7 @@
   <div class="d-flex align-items-center gap-2 flex-wrap">
     <a href="<?= url('/orders') ?>" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle"></i> Nueva orden</a>
     <a href="<?= url('/customers') ?>" class="btn btn-outline-secondary btn-sm"><i class="bi bi-person-plus"></i> Nuevo cliente</a>
-    <a href="<?= url('/receipts') ?>" class="btn btn-outline-secondary btn-sm"><i class="bi bi-printer"></i> Último comprobante</a>
+    <a href="<?= url('/settings') ?>" class="btn btn-outline-secondary btn-sm"><i class="bi bi-gear"></i> Configuración</a>
     <span class="badge text-bg-light"><i class="bi bi-bell"></i> 0</span>
     <span class="text-muted">Usuario: <strong><?= e(App\Core\Auth::user()['username'] ?? '-') ?></strong></span>
   </div>

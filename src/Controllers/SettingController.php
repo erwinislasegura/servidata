@@ -6,10 +6,10 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 
-final class QuotationController extends Controller
+final class SettingController extends Controller
 {
     public function index(): void
     {
-        $this->view('quotations/index');
+        $this->view('settings/index');
     }
 }
