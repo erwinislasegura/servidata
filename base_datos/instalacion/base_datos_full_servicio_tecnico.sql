@@ -7,8 +7,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ==================================================
 -- SOURCE: base_datos/esquema/esquema.sql
 -- ==================================================
-CREATE DATABASE IF NOT EXISTS cotiza_saas CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
--- USE cotiza_saas;  -- removido para instalación genérica
+CREATE DATABASE IF NOT EXISTS taller_servicio CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE taller_servicio;
 
 CREATE TABLE roles (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -382,7 +382,7 @@ CREATE TABLE documentos_plantillas (
 -- ==================================================
 -- SOURCE: base_datos/esquema/semillas.sql
 -- ==================================================
--- USE cotiza_saas;  -- removido para instalación genérica
+USE taller_servicio;
 
 INSERT INTO roles (id, nombre, codigo) VALUES
 (1, 'Superadministrador', 'superadministrador'),
@@ -436,7 +436,7 @@ INSERT INTO configuraciones (clave, valor, descripcion) VALUES
 -- ==================================================
 -- SOURCE: base_datos/esquema/datos_demo.sql
 -- ==================================================
--- USE cotiza_saas;  -- removido para instalación genérica
+USE taller_servicio;
 
 INSERT INTO empresas (id, razon_social, nombre_comercial, identificador_fiscal, correo, telefono, direccion, ciudad, pais, estado, fecha_activacion, plan_id)
 VALUES
@@ -502,7 +502,7 @@ INSERT INTO configuraciones_empresa (empresa_id, clave, valor) VALUES
 -- ==================================================
 -- SOURCE: base_datos/actualizaciones/actualizacion_coherencia_planes_publicos.sql
 -- ==================================================
--- USE cotiza_saas;  -- removido para instalación genérica
+USE taller_servicio;
 
 -- Funcionalidades faltantes + descripciones comerciales coherentes
 INSERT INTO funcionalidades (nombre, codigo_interno, descripcion, tipo_valor, estado)
@@ -650,7 +650,7 @@ ALTER TABLE empresas
 -- SOURCE: base_datos/actualizaciones/actualizacion_cotizaciones_detalle_descuentos.sql
 -- ==================================================
 -- Actualización incremental para soportar múltiples líneas con descuentos por línea y descuento global.
--- USE cotiza_saas;  -- removido para instalación genérica
+USE taller_servicio;
 
 SET @db_name = DATABASE();
 
@@ -709,7 +709,7 @@ ALTER TABLE cotizaciones
 -- SOURCE: base_datos/actualizaciones/actualizacion_documentos_plantillas_correo.sql
 -- ==================================================
 -- Crea la tabla de plantillas de documentos/correos si no existe.
--- USE cotiza_saas;  -- removido para instalación genérica
+USE taller_servicio;
 
 CREATE TABLE IF NOT EXISTS documentos_plantillas (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -1009,7 +1009,7 @@ CREATE TABLE IF NOT EXISTS listas_precios_reglas (
 -- Actualización incremental del panel comercial SaaS.
 -- Recomendado: ejecutar primero un respaldo completo de la base de datos.
 
--- USE cotiza_saas;  -- removido para instalación genérica
+USE taller_servicio;
 
 -- =====================================================
 -- 1) Ajustes en tablas existentes para compatibilidad.
@@ -1250,7 +1250,7 @@ PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 -- ==================================================
 -- SOURCE: base_datos/actualizaciones/actualizacion_panel_admin_saas.sql
 -- ==================================================
--- USE cotiza_saas;  -- removido para instalación genérica
+USE taller_servicio;
 
 -- Ajustes de estructura para panel administrador SaaS
 ALTER TABLE planes
@@ -1655,7 +1655,7 @@ PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 -- ==================================================
 -- SOURCE: base_datos/actualizaciones/actualizacion_roles_empresa.sql
 -- ==================================================
--- USE cotiza_saas;  -- removido para instalación genérica
+USE taller_servicio;
 
 INSERT INTO roles (nombre, codigo) VALUES
 ('Administrador', 'administrador_empresa'),
@@ -1992,7 +1992,7 @@ WHERE NOT EXISTS (
 -- SOURCE: base_datos/actualizaciones/actualizacion_usuarios_perfil_contacto.sql
 -- ==================================================
 -- Agrega campos de perfil/contacto al módulo de usuarios de empresa.
--- USE cotiza_saas;  -- removido para instalación genérica
+USE taller_servicio;
 
 SET @db_name = DATABASE();
 

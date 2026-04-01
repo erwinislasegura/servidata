@@ -9,6 +9,7 @@ CargadorEntorno::cargar(__DIR__ . '/../.env');
 $config = require __DIR__ . '/../configuracion/base_datos.php';
 
 $dsn = sprintf('mysql:host=%s;port=%s;charset=%s', $config['host'], $config['puerto'], $config['charset']);
+$nombreBaseInstalacion = 'taller_servicio';
 
 $archivos = [
     __DIR__ . '/../base_datos/esquema/esquema.sql',
@@ -25,10 +26,10 @@ try {
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     ]);
 
-    $pdo->exec(sprintf('CREATE DATABASE IF NOT EXISTS `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;', str_replace('`', '``', $config['nombre'])));
-    $pdo->exec(sprintf('USE `%s`;', str_replace('`', '``', $config['nombre'])));
+    $pdo->exec(sprintf('CREATE DATABASE IF NOT EXISTS `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;', str_replace('`', '``', $nombreBaseInstalacion)));
+    $pdo->exec(sprintf('USE `%s`;', str_replace('`', '``', $nombreBaseInstalacion)));
 
-    echo "[INFO] Instalando base de datos completa en {$config['nombre']}...\n";
+    echo "[INFO] Instalando base de datos completa en {$nombreBaseInstalacion}...\n";
 
     foreach ($archivos as $archivo) {
         $sql = file_get_contents($archivo);
@@ -41,7 +42,7 @@ try {
             continue;
         }
 
-        $pdo->exec(sprintf('USE `%s`;', str_replace('`', '``', $config['nombre'])));
+        $pdo->exec(sprintf('USE `%s`;', str_replace('`', '``', $nombreBaseInstalacion)));
         $pdo->exec($sql);
         echo '[OK] ' . basename($archivo) . "\n";
     }
