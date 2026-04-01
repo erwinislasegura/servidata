@@ -57,10 +57,19 @@ Aplicación web en **PHP 8 + MySQL** con arquitectura **MVC** para gestión de t
 3. Configura variables de entorno (opcional) o edita `src/Config/config.php`:
    - `DB_HOST`
    - `DB_PORT`
-   - `DB_DATABASE`
+   - `DB_DATABASE` (usar `taller_servicio`)
    - `DB_USERNAME`
    - `DB_PASSWORD`
    - `APP_URL`
+   
+   Ejemplo recomendado:
+   ```bash
+   export DB_HOST=127.0.0.1
+   export DB_PORT=3306
+   export DB_DATABASE=taller_servicio
+   export DB_USERNAME=root
+   export DB_PASSWORD=
+   ```
 4. Levanta servidor local:
    ```bash
    php -S localhost:8080 router.php
