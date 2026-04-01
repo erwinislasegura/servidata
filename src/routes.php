@@ -14,6 +14,7 @@ $router->post('/customers/create', 'CustomerController@create');
 $router->get('/devices', 'DeviceController@index');
 $router->post('/devices/create', 'DeviceController@create');
 $router->get('/orders', 'OrderController@index');
+$router->post('/orders/create', 'OrderController@create');
 $router->get('/diagnostics', 'DiagnosticController@index');
 $router->get('/quotations', 'QuotationController@index');
 $router->get('/statuses', 'StatusController@index');

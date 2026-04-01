@@ -59,6 +59,10 @@ Aplicación web en **PHP 8 + MySQL** con arquitectura **MVC** para gestión de t
    ```bash
    mysql -u root -p < database/taller_servicio.sql
    ```
+   Luego aplica mejoras Chile:
+   ```bash
+   mysql -u root -p taller_servicio < database/migrations/2026_04_01_refactor_chile.sql
+   ```
 3. Configura variables de entorno (opcional) o edita `src/Config/config.php`:
    - `DB_HOST`
    - `DB_PORT`
@@ -88,6 +92,19 @@ Aplicación web en **PHP 8 + MySQL** con arquitectura **MVC** para gestión de t
 - Usuario: `admin`
 - Email: `admin@tallerlocal.com`
 - Password: `Admin123*`
+
+## Refactor UX Chile (implementado)
+
+- Menú lateral profesional con grupos, iconos y estado activo.
+- Topbar con búsqueda y accesos rápidos.
+- Dashboard con KPIs operativos y tabla de últimas órdenes.
+- Módulo de órdenes unificado (formulario arriba + listado abajo).
+- Formato de moneda CLP sin decimales (`$45.000`).
+- Helper de fecha chilena para vistas de operación.
+
+## Datos de prueba
+
+El archivo `database/taller_servicio.sql` incluye datos semilla para usuarios, estados y registros base para comenzar pruebas funcionales inmediatamente.
 
 ## Esquema de base de datos
 
