@@ -230,3 +230,8 @@ function nombre_empresa_actual(): ?string
     $nombre = $empresa['nombre_comercial'] ?? $empresa['razon_social'] ?? null;
     return $nombre;
 }
+
+function formato_clp(int|float|string|null $monto): string
+{
+    return '$' . number_format((float) ($monto ?? 0), 0, ',', '.');
+}
