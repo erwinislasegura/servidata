@@ -4,3 +4,13 @@ body { font-family: Inter, Segoe UI, sans-serif; }
 .sidebar .nav-link:hover { background: rgba(255,255,255,.12); }
 .topbar { position: sticky; top: 0; z-index: 100; }
 @media (max-width: 992px) { .sidebar { display:none; } }
+
+.login-wrapper {
+  background: radial-gradient(circle at 20% 20%, #243b53 0%, #0b1320 60%);
+}
+.login-card { border-radius: 1rem; }
+.login-brand {
+  background: linear-gradient(135deg, #111827 0%, #1f2937 55%, #374151 100%);
+  min-height: 480px;
+}
+.login-form .form-control { border-radius: .65rem; }
