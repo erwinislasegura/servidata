@@ -1,5 +1,5 @@
 -- SQL FULL AUTOGENERADO: Servicio Técnico
--- Generado: 2026-04-01 05:07:25 UTC
+-- Generado: 2026-04-01 05:27:05 UTC
 -- Incluye: esquema base + semillas + datos_demo + todas las actualizaciones
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -7,8 +7,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ==================================================
 -- SOURCE: base_datos/esquema/esquema.sql
 -- ==================================================
-CREATE DATABASE IF NOT EXISTS taller_servicio CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE taller_servicio;
+CREATE DATABASE IF NOT EXISTS cotiza_saas CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- USE cotiza_saas;  -- removido para instalación genérica
 
 CREATE TABLE roles (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -382,7 +382,7 @@ CREATE TABLE documentos_plantillas (
 -- ==================================================
 -- SOURCE: base_datos/esquema/semillas.sql
 -- ==================================================
-USE taller_servicio;
+-- USE cotiza_saas;  -- removido para instalación genérica
 
 INSERT INTO roles (id, nombre, codigo) VALUES
 (1, 'Superadministrador', 'superadministrador'),
@@ -436,7 +436,7 @@ INSERT INTO configuraciones (clave, valor, descripcion) VALUES
 -- ==================================================
 -- SOURCE: base_datos/esquema/datos_demo.sql
 -- ==================================================
-USE taller_servicio;
+-- USE cotiza_saas;  -- removido para instalación genérica
 
 INSERT INTO empresas (id, razon_social, nombre_comercial, identificador_fiscal, correo, telefono, direccion, ciudad, pais, estado, fecha_activacion, plan_id)
 VALUES
@@ -502,7 +502,7 @@ INSERT INTO configuraciones_empresa (empresa_id, clave, valor) VALUES
 -- ==================================================
 -- SOURCE: base_datos/actualizaciones/actualizacion_coherencia_planes_publicos.sql
 -- ==================================================
-USE taller_servicio;
+-- USE cotiza_saas;  -- removido para instalación genérica
 
 -- Funcionalidades faltantes + descripciones comerciales coherentes
 INSERT INTO funcionalidades (nombre, codigo_interno, descripcion, tipo_valor, estado)
@@ -570,7 +570,7 @@ INSERT INTO tmp_planes_base (
 ('Profesional', 'profesional', 'Plan recomendado para escalar ventas con inventario y control comercial.', 26000, 10, 280800, 30, 1, 1, 1, 2, 'Más elegido', 'Incluye inventario completo, seguimiento y analítica base.', '#0ea5a4', 8, 0, 'Plan recomendado para la mayoría de empresas.', 'activo'),
 ('Empresa', 'empresa', 'Plan avanzado para operación integral con mayor capacidad y control.', 55000, 15, 561000, 30, 1, 1, 0, 3, 'Escalable', 'Acceso completo a módulos y operación multiusuario.', '#7c3aed', 0, 1, 'Plan corporativo con usuarios ilimitados.', 'activo');
 
-INSERT INTO planes (nombre, slug, descripcion_comercial, precio_mensual, descuento_anual_pct, precio_anual, duracion_dias, visible, destacado, recomendado, orden_visualizacion, insignia, resumen_comercial, color_visual, maximo_usuarios, usuarios_ilimitados, observaciones_internas, estado)
+INSERT INTO planes (nombre, slug, descripcion_comercial, precio_mensual, descuento_anual_pct, precio_anual, duracion_dias, visible, destacado, recomendado, orden_visualizacion, insignia, resumen_comercial, color_visual, maximo_usuarios, usuarios_ilimitados, observaciones_internas, estado) 
 SELECT t.nombre, t.slug, t.descripcion_comercial, t.precio_mensual, t.descuento_anual_pct, t.precio_anual, t.duracion_dias, t.visible, t.destacado, t.recomendado, t.orden_visualizacion, t.insignia, t.resumen_comercial, t.color_visual, t.maximo_usuarios, t.usuarios_ilimitados, t.observaciones_internas, t.estado FROM tmp_planes_base t LEFT JOIN planes p ON p.slug = t.slug WHERE p.id IS NULL;
 
 UPDATE planes p
@@ -650,7 +650,7 @@ ALTER TABLE empresas
 -- SOURCE: base_datos/actualizaciones/actualizacion_cotizaciones_detalle_descuentos.sql
 -- ==================================================
 -- Actualización incremental para soportar múltiples líneas con descuentos por línea y descuento global.
-USE taller_servicio;
+-- USE cotiza_saas;  -- removido para instalación genérica
 
 SET @db_name = DATABASE();
 
@@ -709,7 +709,7 @@ ALTER TABLE cotizaciones
 -- SOURCE: base_datos/actualizaciones/actualizacion_documentos_plantillas_correo.sql
 -- ==================================================
 -- Crea la tabla de plantillas de documentos/correos si no existe.
-USE taller_servicio;
+-- USE cotiza_saas;  -- removido para instalación genérica
 
 CREATE TABLE IF NOT EXISTS documentos_plantillas (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -1009,7 +1009,7 @@ CREATE TABLE IF NOT EXISTS listas_precios_reglas (
 -- Actualización incremental del panel comercial SaaS.
 -- Recomendado: ejecutar primero un respaldo completo de la base de datos.
 
-USE taller_servicio;
+-- USE cotiza_saas;  -- removido para instalación genérica
 
 -- =====================================================
 -- 1) Ajustes en tablas existentes para compatibilidad.
@@ -1250,7 +1250,7 @@ PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 -- ==================================================
 -- SOURCE: base_datos/actualizaciones/actualizacion_panel_admin_saas.sql
 -- ==================================================
-USE taller_servicio;
+-- USE cotiza_saas;  -- removido para instalación genérica
 
 -- Ajustes de estructura para panel administrador SaaS
 ALTER TABLE planes
@@ -1655,7 +1655,7 @@ PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 -- ==================================================
 -- SOURCE: base_datos/actualizaciones/actualizacion_roles_empresa.sql
 -- ==================================================
-USE taller_servicio;
+-- USE cotiza_saas;  -- removido para instalación genérica
 
 INSERT INTO roles (nombre, codigo) VALUES
 ('Administrador', 'administrador_empresa'),
@@ -1992,7 +1992,7 @@ WHERE NOT EXISTS (
 -- SOURCE: base_datos/actualizaciones/actualizacion_usuarios_perfil_contacto.sql
 -- ==================================================
 -- Agrega campos de perfil/contacto al módulo de usuarios de empresa.
-USE taller_servicio;
+-- USE cotiza_saas;  -- removido para instalación genérica
 
 SET @db_name = DATABASE();
 
