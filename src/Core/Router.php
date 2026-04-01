@@ -26,6 +26,9 @@ final class Router
     public function dispatch(string $method, string $uri): void
     {
         $path = parse_url($uri, PHP_URL_PATH) ?: '/';
+        $path = $this->normalizePath($path);
+        $method = strtoupper($method) === 'HEAD' ? 'GET' : strtoupper($method);
+
         $route = $this->routes[$method][$path] ?? null;
 
         if (!$route) {
@@ -43,4 +46,14 @@ final class Router
         $fqcn = 'App\\Controllers\\' . $controller;
         (new $fqcn())->{$handler}();
     }
+    private function normalizePath(string $path): string
+    {
+        if ($path === '/') {
+            return '/';
+        }
+
+        $normalized = '/' . trim($path, '/');
+        return rtrim($normalized, '/') ?: '/';
+    }
+
 }

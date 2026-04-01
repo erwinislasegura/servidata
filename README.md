@@ -68,7 +68,7 @@ Aplicación web en **PHP 8 + MySQL** con arquitectura **MVC** para gestión de t
    - `APP_URL`
 4. Levanta servidor local:
    ```bash
-   php -S localhost:8080
+   php -S localhost:8080 router.php
    ```
 5. Abre:
    - Panel: `http://localhost:8080/login`
