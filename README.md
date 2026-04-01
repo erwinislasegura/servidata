@@ -8,8 +8,7 @@ Aplicación web en **PHP 8 + MySQL** con arquitectura **MVC** para gestión de t
 - Autenticación segura con `password_hash/password_verify`.
 - Protección CSRF básica.
 - Panel administrativo responsive con sidebar y dashboard.
-- Portal público de seguimiento de órdenes.
-- Módulos base listos para ampliar: clientes, equipos, órdenes, diagnósticos, cotizaciones, inventario, pagos, reportes, usuarios, auditoría.
+- Módulos enfocados en operación de ServiData: clientes, nueva orden, técnicos, usuarios y configuración.
 - SQL completo con tablas, claves, índices y datos semilla.
 
 ## Estructura de carpetas
@@ -36,18 +35,10 @@ Aplicación web en **PHP 8 + MySQL** con arquitectura **MVC** para gestión de t
 │       ├── auth/
 │       ├── dashboard/
 │       ├── customers/
-│       ├── devices/
 │       ├── orders/
-│       ├── portal/
-│       ├── diagnostics/
-│       ├── quotations/
-│       ├── inventory/
-│       ├── payments/
-│       ├── receipts/
-│       ├── reports/
 │       ├── technicians/
 │       ├── users/
-│       └── audit/
+│       └── settings/
 └── database/
     └── taller_servicio.sql
 ```
@@ -66,17 +57,25 @@ Aplicación web en **PHP 8 + MySQL** con arquitectura **MVC** para gestión de t
 3. Configura variables de entorno (opcional) o edita `src/Config/config.php`:
    - `DB_HOST`
    - `DB_PORT`
-   - `DB_DATABASE`
+   - `DB_DATABASE` (usar `taller_servicio`)
    - `DB_USERNAME`
    - `DB_PASSWORD`
    - `APP_URL`
+   
+   Ejemplo recomendado:
+   ```bash
+   export DB_HOST=127.0.0.1
+   export DB_PORT=3306
+   export DB_DATABASE=taller_servicio
+   export DB_USERNAME=root
+   export DB_PASSWORD=
+   ```
 4. Levanta servidor local:
    ```bash
    php -S localhost:8080 router.php
    ```
 5. Abre:
    - Panel: `http://localhost:8080/login`
-   - Portal público: `http://localhost:8080/portal`
 
 ## Instalación en hosting compartido / VPS
 
