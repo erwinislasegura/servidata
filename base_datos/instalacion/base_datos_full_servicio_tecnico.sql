@@ -1,5 +1,5 @@
 -- SQL FULL AUTOGENERADO: Servicio Técnico
--- Generado: 2026-04-01 04:56:35 UTC
+-- Generado: 2026-04-01 05:02:45 UTC
 -- Incluye: esquema base + semillas + datos_demo + todas las actualizaciones
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -578,9 +578,9 @@ INSERT INTO planes (
 SELECT
   t.nombre, t.slug, t.descripcion_comercial, t.precio_mensual, t.descuento_anual_pct, t.precio_anual,
   t.duracion_dias, t.visible, t.destacado, t.recomendado, t.orden_visualizacion, t.insignia,
-  t.resumen_comercial, t.color_visual, t.maximo_usuarios, t.usuarios_ilimitados, t.observaciones_internas, t.estado
-FROM tmp_planes_base t
-LEFT JOIN planes p ON p.slug = t.slug
+  t.resumen_comercial, t.color_visual, t.maximo_usuarios, t.usuarios_ilimitados, t.observaciones_internas, t.estado 
+FROM tmp_planes_base t 
+LEFT JOIN planes p ON p.slug = t.slug 
 WHERE p.id IS NULL;
 
 UPDATE planes p

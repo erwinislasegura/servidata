@@ -74,9 +74,9 @@ INSERT INTO planes (
 SELECT
   t.nombre, t.slug, t.descripcion_comercial, t.precio_mensual, t.descuento_anual_pct, t.precio_anual,
   t.duracion_dias, t.visible, t.destacado, t.recomendado, t.orden_visualizacion, t.insignia,
-  t.resumen_comercial, t.color_visual, t.maximo_usuarios, t.usuarios_ilimitados, t.observaciones_internas, t.estado
-FROM tmp_planes_base t
-LEFT JOIN planes p ON p.slug = t.slug
+  t.resumen_comercial, t.color_visual, t.maximo_usuarios, t.usuarios_ilimitados, t.observaciones_internas, t.estado 
+FROM tmp_planes_base t 
+LEFT JOIN planes p ON p.slug = t.slug 
 WHERE p.id IS NULL;
 
 UPDATE planes p
