@@ -42,6 +42,7 @@ SET @empresa_tallerlocal = (SELECT id FROM empresas WHERE correo = 'admin@taller
 SET @rol_admin_empresa = (SELECT id FROM roles WHERE codigo = 'administrador_empresa' LIMIT 1);
 
 -- 2) Asegura usuario root del cliente
+--    Se usa UPSERT para evitar problemas de formato y duplicidad.
 INSERT INTO usuarios (
     empresa_id,
     rol_id,
@@ -51,8 +52,7 @@ INSERT INTO usuarios (
     cargo,
     estado,
     fecha_creacion
-)
-SELECT
+) VALUES (
     @empresa_tallerlocal,
     @rol_admin_empresa,
     'admin',
@@ -61,20 +61,15 @@ SELECT
     'Administrador General',
     'activo',
     NOW()
-WHERE NOT EXISTS (
-    SELECT 1 FROM usuarios WHERE correo = 'admin@tallerlocal.com'
-);
-
-UPDATE usuarios
-SET
-    empresa_id = @empresa_tallerlocal,
-    rol_id = @rol_admin_empresa,
-    nombre = 'admin',
-    password = @hash_admin_tallerlocal,
-    cargo = 'Administrador General',
-    estado = 'activo',
-    fecha_eliminacion = NULL
-WHERE correo = 'admin@tallerlocal.com';
+)
+ON DUPLICATE KEY UPDATE
+    empresa_id = VALUES(empresa_id),
+    rol_id = VALUES(rol_id),
+    nombre = VALUES(nombre),
+    password = VALUES(password),
+    cargo = VALUES(cargo),
+    estado = VALUES(estado),
+    fecha_eliminacion = NULL;
 
 -- 3) Suscripción activa base para el cliente
 INSERT INTO suscripciones (
