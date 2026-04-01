@@ -8,7 +8,10 @@ body { font-family: Inter, Segoe UI, sans-serif; background: #f6f8fb; }
 .topbar-search { min-width: 360px; }
 .card { border: 1px solid #e5e7eb; border-radius: .85rem; }
 .card-kpi h3 { font-size: 1.7rem; margin-bottom: 0; color: #0f172a; }
-@media (max-width: 992px) { .sidebar { display:none; } }
+@media (max-width: 992px) {
+  .sidebar { display: block; width: 220px; min-width: 220px; }
+  .topbar-search { min-width: 220px; }
+}
 
 .login-wrapper {
   background: radial-gradient(circle at 20% 20%, #243b53 0%, #0b1320 60%);
