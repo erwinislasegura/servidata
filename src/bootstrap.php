@@ -22,4 +22,4 @@ spl_autoload_register(function (string $class): void {
 $config = require __DIR__ . '/Config/config.php';
 
 App\Core\Container::set('config', $config);
-App\Core\Container::set('db', new App\Core\Database($config['database']));
+App\Core\Container::set('db', static fn (): App\Core\Database => new App\Core\Database($config['database']));

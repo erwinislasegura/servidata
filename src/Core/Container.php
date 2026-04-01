@@ -15,6 +15,14 @@ final class Container
 
     public static function get(string $key): mixed
     {
-        return self::$items[$key] ?? null;
+        if (!array_key_exists($key, self::$items)) {
+            return null;
+        }
+
+        if (self::$items[$key] instanceof \Closure) {
+            self::$items[$key] = (self::$items[$key])();
+        }
+
+        return self::$items[$key];
     }
 }
