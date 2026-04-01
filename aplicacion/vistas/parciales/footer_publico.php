@@ -1,0 +1,1 @@
+<footer class="border-top bg-white mt-5"><div class="container py-4 small text-muted d-flex justify-content-between"><span>© <?= date('Y') ?> App FerriTalia</span><span>Plataforma de gestión comercial</span></div></footer>

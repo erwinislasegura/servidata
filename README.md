@@ -1,122 +1,70 @@
-# Sistema de Gestión de Servicio Técnico
+# CotizaPro SaaS
 
-Aplicación web en **PHP 8 + MySQL** con arquitectura **MVC** para gestión de taller técnico (computadores, impresoras, celulares).
+Plataforma SaaS multiempresa para gestión comercial de cotizaciones, diseñada con arquitectura MVC propia en PHP 8+, MySQL y Bootstrap 5. Incluye landing comercial, autenticación, panel de superadministrador, panel por empresa, gestión de planes, funcionalidades, suscripciones, clientes, productos, cotizaciones, pagos y reportes base.
 
-## Características implementadas
+## Requisitos
+- PHP 8.1+
+- MySQL 8+
+- Apache/Nginx con reescritura de URL
 
-- Arquitectura MVC real (`src/Core`, `src/Controllers`, `src/Models`, `src/Views`).
-- Autenticación segura con `password_hash/password_verify`.
-- Protección CSRF básica.
-- Panel administrativo responsive con sidebar y dashboard.
-- Módulos enfocados en operación de ServiData: clientes, nueva orden, técnicos, usuarios y configuración.
-- SQL completo con tablas, claves, índices y datos semilla.
+## Instalación rápida
+1. Copia `.env.example` a `.env` y ajusta credenciales.
+2. Crea la base de datos e importa:
+   - `base_datos/esquema/esquema.sql`
+   - `base_datos/esquema/semillas.sql`
+   - `base_datos/esquema/datos_demo.sql`
+3. Sirve el proyecto apuntando a `/public`.
 
-## Estructura de carpetas
+## Credenciales demo
+- Superadministrador: `superadmin@cotizapro.com` / `Demo1234*`
+- Administrador empresa demo: `admin@andina.com` / `Demo1234*`
+- Usuario empresa demo: `usuario@andina.com` / `Demo1234*`
+- Usuario QA demo: `qa@andina.com` / `Demo1234*`
 
-```text
-.
-├── index.php
-├── .htaccess
-├── public/
-│   └── assets/
-│       ├── css/app.css
-│       └── js/app.js
-├── src/
-│   ├── bootstrap.php
-│   ├── routes.php
-│   ├── Config/config.php
-│   ├── Core/
-│   ├── Controllers/
-│   ├── Helpers/helpers.php
-│   ├── Models/
-│   └── Views/
-│       ├── layouts/
-│       ├── partials/
-│       ├── auth/
-│       ├── dashboard/
-│       ├── customers/
-│       ├── orders/
-│       ├── technicians/
-│       ├── users/
-│       └── settings/
-└── database/
-    └── taller_servicio.sql
-```
+## Estructura
+- `aplicacion/`: núcleo MVC, controladores, modelos, vistas, servicios, middlewares y ayudantes.
+- `rutas/`: rutas públicas, autenticación, admin y empresa.
+- `base_datos/esquema/`: esquema SQL completo, semillas y datos demo.
+- `documentacion/`: guías de instalación, módulos, base de datos y despliegue.
 
-## Instalación local
+## Módulos principales
+- Landing pública comercial y contratación.
+- Registro de empresa + suscripción inicial.
+- Panel superadministrador (empresas, planes, funcionalidades, suscripciones, pagos, reportes).
+- Panel empresa (clientes, productos, cotizaciones, usuarios).
+- Multiempresa con aislamiento por `empresa_id`.
+- Validación de límites por plan desde base de datos.
 
-1. Clona/copia el proyecto.
-2. Crea la base de datos ejecutando (script idempotente: limpia tablas y vuelve a crear):
-   ```bash
-   mysql -u root -p < database/taller_servicio.sql
-   ```
-   Luego aplica mejoras Chile:
-   ```bash
-   mysql -u root -p taller_servicio < database/migrations/2026_04_01_refactor_chile.sql
-   ```
-3. Configura variables de entorno (opcional) o edita `src/Config/config.php`:
-   - `DB_HOST`
-   - `DB_PORT`
-   - `DB_DATABASE` (usar `taller_servicio`)
-   - `DB_USERNAME`
-   - `DB_PASSWORD`
-   - `APP_URL`
-   
-   Ejemplo recomendado:
-   ```bash
-   export DB_HOST=127.0.0.1
-   export DB_PORT=3306
-   export DB_DATABASE=taller_servicio
-   export DB_USERNAME=root
-   export DB_PASSWORD=
-   ```
-4. Levanta servidor local:
-   ```bash
-   php -S localhost:8080 router.php
-   ```
-5. Abre:
-   - Panel: `http://localhost:8080/login`
+## Notas de desarrollo
+- Arquitectura preparada para integrar SMTP real y pasarela de pago real.
+- El servicio de correo y pagos está desacoplado en `aplicacion/servicios`.
+- Para seguridad base: CSRF, sesiones seguras, `password_hash`, consultas preparadas PDO, escape HTML.
 
-## Instalación en hosting compartido / VPS
+## Notas de producción
+- Activar HTTPS y ajustar cookies seguras.
+- Configurar cron para vencimientos de suscripciones.
+- Reforzar logs y monitoreo (SIEM/APM).
 
-- Subir archivos al `public_html` (o configurar virtual host apuntando a la raíz del proyecto).
-- Activar `mod_rewrite` y permitir `.htaccess`.
-- Importar `database/taller_servicio.sql`.
-- Configurar credenciales de BD en variables de entorno o `src/Config/config.php`.
-- Asegurar permisos de escritura para `storage/`.
-- Activar HTTPS en producción.
+## Configuración de DocumentRoot
+- **Recomendado**: apuntar el virtual host a `/public`.
+- **Si no puedes cambiar DocumentRoot** (hosting compartido), usa el `index.php` y `.htaccess` de la raíz del proyecto incluidos en este repositorio; estos redirigen automáticamente al front controller de `/public`.
+- La normalización de rutas soporta despliegues en subcarpetas (ejemplo: `/cotiza`).
 
-## Credenciales iniciales
 
-- Usuario: `admin`
-- Email: `admin@tallerlocal.com`
-- Password: `Admin123*`
 
-## Refactor UX Chile (implementado)
+## Script de actualización de accesos
+Si necesitas regenerar/normalizar usuarios de acceso (superadmin, admin y QA), ejecuta:
+- `base_datos/esquema/actualizar_usuarios_acceso.sql`
+- Si el login falla con usuarios demo, vuelve a ejecutar este script para restablecer contraseñas.
 
-- Menú lateral profesional con grupos, iconos y estado activo.
-- Topbar con búsqueda y accesos rápidos.
-- Dashboard con KPIs operativos y tabla de últimas órdenes.
-- Módulo de órdenes unificado (formulario arriba + listado abajo).
-- Formato de moneda CLP sin decimales (`$45.000`).
-- Helper de fecha chilena para vistas de operación.
-
-## Datos de prueba
-
-El archivo `database/taller_servicio.sql` incluye datos semilla para usuarios, estados y registros base para comenzar pruebas funcionales inmediatamente.
-
-## Esquema de base de datos
-
-Tablas principales:
-
-- `users`, `roles`, `permissions`, `role_permissions`
-- `customers`, `devices`, `device_photos`
-- `technicians`
-- `service_orders`, `service_statuses`, `service_order_status_history`
-- `diagnostics`
-- `quotations`, `quotation_items`
-- `inventory_items`, `inventory_movements`, `suppliers`
-- `payments`, `receipts`
-- `settings`, `audit_logs`
-
-> Revisa `database/taller_servicio.sql` para el esquema completo y datos de ejemplo.
+## Scripts de actualización de base de datos
+- Actualización acumulativa de todos los cambios SQL en `base_datos/actualizaciones`:
+  - `php scripts/actualizar_base_datos_acumulativa.php`
+- Creación/normalización de usuarios administrativos base (superadministrador y administrador cliente):
+  - `php scripts/crear_usuarios_admin.php`
+- Ambos scripts usan la base de datos configurada en `.env`/`configuracion/base_datos.php` (ejemplo: `ferritalia_app_ferri`).
+- Si necesitas poblar todas las funcionalidades existentes para todos los planes, ejecuta también:
+  - `base_datos/actualizaciones/actualizacion_planes_funcionalidades_completas.sql`
+- Si `/admin/funcionalidades` aparece vacío, ejecuta:
+  - `base_datos/actualizaciones/actualizacion_funcionalidades_admin_preconfiguradas.sql`
+- El script de usuarios administrativos (`actualizacion_usuarios_superadmin_admin_cliente.sql`) crea/normaliza el plan `full`, asigna ese plan a `admin.cliente@cotizapro.com` y habilita todas las funcionalidades para dicho plan.
