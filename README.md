@@ -8,8 +8,7 @@ Aplicación web en **PHP 8 + MySQL** con arquitectura **MVC** para gestión de t
 - Autenticación segura con `password_hash/password_verify`.
 - Protección CSRF básica.
 - Panel administrativo responsive con sidebar y dashboard.
-- Portal público de seguimiento de órdenes.
-- Módulos base listos para ampliar: clientes, equipos, órdenes, diagnósticos, cotizaciones, inventario, pagos, reportes, usuarios, auditoría.
+- Módulos enfocados en operación de ServiData: clientes, nueva orden, técnicos, usuarios y configuración.
 - SQL completo con tablas, claves, índices y datos semilla.
 
 ## Estructura de carpetas
@@ -36,18 +35,10 @@ Aplicación web en **PHP 8 + MySQL** con arquitectura **MVC** para gestión de t
 │       ├── auth/
 │       ├── dashboard/
 │       ├── customers/
-│       ├── devices/
 │       ├── orders/
-│       ├── portal/
-│       ├── diagnostics/
-│       ├── quotations/
-│       ├── inventory/
-│       ├── payments/
-│       ├── receipts/
-│       ├── reports/
 │       ├── technicians/
 │       ├── users/
-│       └── audit/
+│       └── settings/
 └── database/
     └── taller_servicio.sql
 ```
@@ -76,7 +67,6 @@ Aplicación web en **PHP 8 + MySQL** con arquitectura **MVC** para gestión de t
    ```
 5. Abre:
    - Panel: `http://localhost:8080/login`
-   - Portal público: `http://localhost:8080/portal`
 
 ## Instalación en hosting compartido / VPS
 
