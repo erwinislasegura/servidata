@@ -7,6 +7,7 @@
     <a class="nav-link text-white" href="<?= url('/orders') ?>">Órdenes</a>
     <a class="nav-link text-white" href="<?= url('/diagnostics') ?>">Diagnósticos</a>
     <a class="nav-link text-white" href="<?= url('/quotations') ?>">Cotizaciones</a>
+    <a class="nav-link text-white" href="<?= url('/statuses') ?>">Estados y Seguimiento</a>
     <a class="nav-link text-white" href="<?= url('/technicians') ?>">Técnicos</a>
     <a class="nav-link text-white" href="<?= url('/inventory') ?>">Inventario</a>
     <a class="nav-link text-white" href="<?= url('/payments') ?>">Caja/Pagos</a>
