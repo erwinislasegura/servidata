@@ -12,6 +12,7 @@ use Aplicacion\Controladores\Empresa\GestionComercialControlador;
 use Aplicacion\Controladores\Empresa\DocumentosControlador;
 use Aplicacion\Controladores\Empresa\PuntoVentaControlador;
 use Aplicacion\Controladores\Empresa\InventarioControlador;
+use Aplicacion\Controladores\Empresa\ServicioTecnicoControlador;
 
 $mwEmpresa = [AutenticadoMiddleware::class, EmpresaMiddleware::class];
 
@@ -148,6 +149,16 @@ $enrutador->agregar('GET', '/app/inventario/proveedores', [InventarioControlador
 $enrutador->agregar('POST', '/app/inventario/proveedores', [InventarioControlador::class, 'guardarProveedor'], $mwEmpresa);
 $enrutador->agregar('GET', '/app/configuracion/correos-stock', [ConfiguracionControlador::class, 'correosStock'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/configuracion/correos-stock', [ConfiguracionControlador::class, 'correosStock'], $mwEmpresa);
+
+
+$enrutador->agregar('GET', '/app/servicio-tecnico/dashboard', [ServicioTecnicoControlador::class, 'dashboard'], $mwEmpresa);
+$enrutador->agregar('GET', '/app/servicio-tecnico/clientes', [ServicioTecnicoControlador::class, 'clientes'], $mwEmpresa);
+$enrutador->agregar('POST', '/app/servicio-tecnico/clientes', [ServicioTecnicoControlador::class, 'guardarCliente'], $mwEmpresa);
+$enrutador->agregar('GET', '/app/servicio-tecnico/equipos', [ServicioTecnicoControlador::class, 'equipos'], $mwEmpresa);
+$enrutador->agregar('POST', '/app/servicio-tecnico/equipos', [ServicioTecnicoControlador::class, 'guardarEquipo'], $mwEmpresa);
+$enrutador->agregar('GET', '/app/servicio-tecnico/ordenes', [ServicioTecnicoControlador::class, 'ordenes'], $mwEmpresa);
+$enrutador->agregar('POST', '/app/servicio-tecnico/ordenes', [ServicioTecnicoControlador::class, 'guardarOrden'], $mwEmpresa);
+$enrutador->agregar('GET', '/app/servicio-tecnico/portal-publico', [ServicioTecnicoControlador::class, 'portalPublico'], $mwEmpresa);
 
 $enrutador->agregar('GET', '/app/punto-venta', [PuntoVentaControlador::class, 'index'], $mwEmpresa);
 $enrutador->agregar('POST', '/app/punto-venta/venta/guardar', [PuntoVentaControlador::class, 'guardarVenta'], $mwEmpresa);
