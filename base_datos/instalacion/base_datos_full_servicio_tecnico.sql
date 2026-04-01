@@ -1,5 +1,5 @@
 -- SQL FULL AUTOGENERADO: Servicio Técnico
--- Generado: 2026-04-01 05:02:45 UTC
+-- Generado: 2026-04-01 05:07:25 UTC
 -- Incluye: esquema base + semillas + datos_demo + todas las actualizaciones
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -570,18 +570,8 @@ INSERT INTO tmp_planes_base (
 ('Profesional', 'profesional', 'Plan recomendado para escalar ventas con inventario y control comercial.', 26000, 10, 280800, 30, 1, 1, 1, 2, 'Más elegido', 'Incluye inventario completo, seguimiento y analítica base.', '#0ea5a4', 8, 0, 'Plan recomendado para la mayoría de empresas.', 'activo'),
 ('Empresa', 'empresa', 'Plan avanzado para operación integral con mayor capacidad y control.', 55000, 15, 561000, 30, 1, 1, 0, 3, 'Escalable', 'Acceso completo a módulos y operación multiusuario.', '#7c3aed', 0, 1, 'Plan corporativo con usuarios ilimitados.', 'activo');
 
-INSERT INTO planes (
-  nombre, slug, descripcion_comercial, precio_mensual, descuento_anual_pct, precio_anual,
-  duracion_dias, visible, destacado, recomendado, orden_visualizacion, insignia,
-  resumen_comercial, color_visual, maximo_usuarios, usuarios_ilimitados, observaciones_internas, estado
-)
-SELECT
-  t.nombre, t.slug, t.descripcion_comercial, t.precio_mensual, t.descuento_anual_pct, t.precio_anual,
-  t.duracion_dias, t.visible, t.destacado, t.recomendado, t.orden_visualizacion, t.insignia,
-  t.resumen_comercial, t.color_visual, t.maximo_usuarios, t.usuarios_ilimitados, t.observaciones_internas, t.estado 
-FROM tmp_planes_base t 
-LEFT JOIN planes p ON p.slug = t.slug 
-WHERE p.id IS NULL;
+INSERT INTO planes (nombre, slug, descripcion_comercial, precio_mensual, descuento_anual_pct, precio_anual, duracion_dias, visible, destacado, recomendado, orden_visualizacion, insignia, resumen_comercial, color_visual, maximo_usuarios, usuarios_ilimitados, observaciones_internas, estado)
+SELECT t.nombre, t.slug, t.descripcion_comercial, t.precio_mensual, t.descuento_anual_pct, t.precio_anual, t.duracion_dias, t.visible, t.destacado, t.recomendado, t.orden_visualizacion, t.insignia, t.resumen_comercial, t.color_visual, t.maximo_usuarios, t.usuarios_ilimitados, t.observaciones_internas, t.estado FROM tmp_planes_base t LEFT JOIN planes p ON p.slug = t.slug WHERE p.id IS NULL;
 
 UPDATE planes p
 INNER JOIN tmp_planes_base t ON t.slug = p.slug
