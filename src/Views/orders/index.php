@@ -1,17 +1,25 @@
+<style>
+  .orders-form-compact .form-label { margin-bottom: .2rem; font-size: .82rem; }
+  .orders-form-compact .form-control,
+  .orders-form-compact .form-select { min-height: calc(1.5em + .45rem + 2px); padding: .2rem .45rem; font-size: .9rem; }
+  .orders-form-compact textarea.form-control { min-height: 58px; }
+</style>
+
 <h5 class="mb-3">Nueva Orden de Servicio (rápida de mostrador)</h5>
 <div class="card mb-4">
   <div class="card-body">
-    <form method="post" action="<?= url('/orders/create') ?>" class="row g-3">
+    <form method="post" action="<?= url('/orders/create') ?>" class="row g-2 orders-form-compact">
       <?= csrf_field() ?>
       <div class="col-12"><h6 class="border-bottom pb-2">1) Datos del cliente</h6></div>
       <div class="col-md-4">
         <label class="form-label">Cliente existente</label>
-        <select class="form-select" name="customer_id">
+        <select class="form-select form-select-sm" name="customer_id" id="customer_id">
           <option value="0">-- Nuevo cliente rápido --</option>
           <?php foreach ($customers as $c): ?>
             <option value="<?= e((string) $c['id']) ?>"><?= e($c['first_name'] . ' ' . $c['last_name'] . ' | ' . ($c['document_number'] ?: 'Sin RUT')) ?></option>
           <?php endforeach; ?>
         </select>
+        <small class="text-muted">Si seleccionas cliente existente, se bloquea el ingreso manual para evitar doble digitación.</small>
       </div>
       <div class="col-md-4"><label class="form-label">Nombres</label><input name="customer_first_name" class="form-control"></div>
       <div class="col-md-4"><label class="form-label">Apellidos</label><input name="customer_last_name" class="form-control"></div>
@@ -79,3 +87,30 @@
     </div>
   </div>
 </div>
+
+<script>
+  (() => {
+    const customerSelect = document.getElementById('customer_id');
+    if (!customerSelect) return;
+
+    const customerFields = [
+      'customer_first_name',
+      'customer_last_name',
+      'customer_document',
+      'customer_phone',
+      'customer_email',
+      'customer_city'
+    ].map((name) => document.querySelector(`input[name="${name}"]`)).filter(Boolean);
+
+    const toggleCustomerFields = () => {
+      const useExistingCustomer = customerSelect.value !== '0' && customerSelect.value !== '';
+      customerFields.forEach((field) => {
+        field.disabled = useExistingCustomer;
+        field.classList.toggle('bg-light', useExistingCustomer);
+      });
+    };
+
+    customerSelect.addEventListener('change', toggleCustomerFields);
+    toggleCustomerFields();
+  })();
+</script>
