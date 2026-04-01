@@ -22,3 +22,26 @@ function url(string $path = ''): string {
 function asset(string $path): string {
     return url('/public/' . ltrim($path, '/'));
 }
+
+function clp(mixed $amount): string
+{
+    return '$' . number_format((float) $amount, 0, ',', '.');
+}
+
+function fecha_cl(?string $date): string
+{
+    if (!$date) {
+        return '-';
+    }
+    $ts = strtotime($date);
+    if ($ts === false) {
+        return '-';
+    }
+    return date('d-m-Y H:i', $ts);
+}
+
+function is_active(string $path): bool
+{
+    $uri = $_SERVER['REQUEST_URI'] ?? '/';
+    return str_contains($uri, $path);
+}

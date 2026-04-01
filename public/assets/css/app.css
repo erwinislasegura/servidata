@@ -1,8 +1,13 @@
-body { font-family: Inter, Segoe UI, sans-serif; }
-.sidebar { width: 260px; }
-.sidebar .nav-link { border-radius: .5rem; font-size: .95rem; }
-.sidebar .nav-link:hover { background: rgba(255,255,255,.12); }
+body { font-family: Inter, Segoe UI, sans-serif; background: #f6f8fb; }
+.sidebar { width: 280px; background: #fff; border-right: 1px solid #e5e7eb; }
+.sidebar .nav-link { border-radius: .65rem; font-size: .92rem; color: #374151; display: flex; gap: .5rem; align-items: center; }
+.sidebar .nav-link:hover { background: #eef2ff; color: #1e3a8a; }
+.sidebar .nav-link.active { background: #dbeafe; color: #1e40af; font-weight: 600; }
+.menu-group { color: #6b7280; font-size: .72rem; font-weight: 700; letter-spacing: .08em; }
 .topbar { position: sticky; top: 0; z-index: 100; }
+.topbar-search { min-width: 360px; }
+.card { border: 1px solid #e5e7eb; border-radius: .85rem; }
+.card-kpi h3 { font-size: 1.7rem; margin-bottom: 0; color: #0f172a; }
 @media (max-width: 992px) { .sidebar { display:none; } }
 
 .login-wrapper {
