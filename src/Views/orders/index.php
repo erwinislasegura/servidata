@@ -1,24 +1,51 @@
+<style>
+  .orders-form-compact .form-label { margin-bottom: .2rem; font-size: .82rem; }
+  .orders-form-compact .form-control,
+  .orders-form-compact .form-select { min-height: calc(1.5em + .45rem + 2px); padding: .2rem .45rem; font-size: .9rem; }
+  .orders-form-compact textarea.form-control { min-height: 58px; }
+  .customer-preview-item { font-size: .86rem; margin-bottom: .15rem; }
+</style>
+
 <h5 class="mb-3">Nueva Orden de Servicio (rápida de mostrador)</h5>
 <div class="card mb-4">
   <div class="card-body">
-    <form method="post" action="<?= url('/orders/create') ?>" class="row g-3">
+    <form method="post" action="<?= url('/orders/create') ?>" class="row g-2 orders-form-compact">
       <?= csrf_field() ?>
       <div class="col-12"><h6 class="border-bottom pb-2">1) Datos del cliente</h6></div>
       <div class="col-md-4">
-        <label class="form-label">Cliente existente</label>
-        <select class="form-select" name="customer_id">
-          <option value="0">-- Nuevo cliente rápido --</option>
+        <label class="form-label">Buscar cliente (nombre o RUT)</label>
+        <input type="search" id="customer_search" class="form-control" placeholder="Ej: Juan Pérez o 12.345.678-9">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label d-flex justify-content-between align-items-center">
+          <span>Cliente existente</span>
+          <button class="btn btn-link btn-sm p-0 text-decoration-none" type="button" data-bs-toggle="modal" data-bs-target="#newCustomerModal" title="Nuevo cliente">
+            <i class="bi bi-person-plus"></i> Nuevo
+          </button>
+        </label>
+        <select class="form-select form-select-sm" name="customer_id" id="customer_id">
+          <option value="">-- Selecciona un cliente --</option>
           <?php foreach ($customers as $c): ?>
-            <option value="<?= e((string) $c['id']) ?>"><?= e($c['first_name'] . ' ' . $c['last_name'] . ' | ' . ($c['document_number'] ?: 'Sin RUT')) ?></option>
+            <option
+              value="<?= e((string) $c['id']) ?>"
+              data-first-name="<?= e((string) ($c['first_name'] ?? '')) ?>"
+              data-last-name="<?= e((string) ($c['last_name'] ?? '')) ?>"
+              data-document="<?= e((string) ($c['document_number'] ?? '')) ?>"
+              data-phone="<?= e((string) ($c['phone'] ?? '')) ?>"
+              data-email="<?= e((string) ($c['email'] ?? '')) ?>"
+              data-city="<?= e((string) ($c['city'] ?? '')) ?>"
+              data-address="<?= e((string) ($c['address'] ?? '')) ?>"
+            ><?= e($c['first_name'] . ' ' . $c['last_name'] . ' | ' . ($c['document_number'] ?: 'Sin RUT')) ?></option>
           <?php endforeach; ?>
         </select>
+        <small class="text-muted">No se digitan datos de cliente en esta orden: se toman del registro seleccionado.</small>
       </div>
-      <div class="col-md-4"><label class="form-label">Nombres</label><input name="customer_first_name" class="form-control"></div>
-      <div class="col-md-4"><label class="form-label">Apellidos</label><input name="customer_last_name" class="form-control"></div>
-      <div class="col-md-3"><label class="form-label">RUT</label><input name="customer_document" class="form-control"></div>
-      <div class="col-md-3"><label class="form-label">Teléfono (+56)</label><input name="customer_phone" class="form-control"></div>
-      <div class="col-md-3"><label class="form-label">Correo</label><input name="customer_email" class="form-control"></div>
-      <div class="col-md-3"><label class="form-label">Comuna / Ciudad</label><input name="customer_city" class="form-control"></div>
+      <div class="col-md-4">
+        <label class="form-label">Datos del cliente seleccionado</label>
+        <div id="customer_preview" class="border rounded p-2 bg-light-subtle">
+          <div class="customer-preview-item text-muted">Selecciona un cliente para ver sus datos.</div>
+        </div>
+      </div>
 
       <div class="col-12"><h6 class="border-bottom pb-2 mt-2">2) Equipo y falla reportada</h6></div>
       <div class="col-md-3"><label class="form-label">Tipo equipo</label><select name="device_type" class="form-select"><option>computador</option><option>notebook</option><option>impresora</option><option>celular</option><option>tablet</option><option selected>otro</option></select></div>
@@ -40,7 +67,7 @@
       <div class="col-md-3"><label class="form-label">Técnico</label><select name="technician_id" class="form-select"><option value="">Sin asignar</option><?php foreach ($technicians as $t): ?><option value="<?= e((string) $t['id']) ?>"><?= e($t['full_name']) ?></option><?php endforeach; ?></select></div>
       <div class="col-md-3"><label class="form-label">Estado inicial</label><select name="status_id" class="form-select"><?php foreach ($statuses as $s): ?><option value="<?= e((string) $s['id']) ?>" <?= $s['name'] === 'Ingresado' ? 'selected' : '' ?>><?= e($s['name']) ?></option><?php endforeach; ?></select></div>
       <div class="col-md-2"><label class="form-label">Prioridad</label><select name="priority" class="form-select"><option>baja</option><option selected>media</option><option>alta</option><option>urgente</option></select></div>
-      <div class="col-md-2"><label class="form-label">Entrega estimada</label><input type="datetime-local" name="estimated_date" class="form-control"></div>
+      <div class="col-md-2"><label class="form-label">Entrega estimada</label><input type="date" name="estimated_date" class="form-control"></div>
       <div class="col-md-2"><label class="form-label">Total estimado (CLP)</label><input name="estimated_total" class="form-control clp-input" value="0"></div>
       <div class="col-md-6"><label class="form-label">Comentarios internos</label><textarea name="internal_notes" class="form-control" rows="2"></textarea></div>
       <div class="col-md-6"><label class="form-label">Comentarios visibles cliente</label><textarea name="public_notes" class="form-control" rows="2"></textarea></div>
@@ -79,3 +106,133 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="newCustomerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header py-2">
+        <h6 class="modal-title mb-0">Nuevo cliente</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <form id="new_customer_form">
+        <div class="modal-body py-2">
+          <input type="hidden" name="csrf_token" value="<?= e((string) csrf_token()) ?>">
+          <div class="row g-2 orders-form-compact">
+            <div class="col-md-4"><label class="form-label">Nombres</label><input required name="first_name" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">Apellidos</label><input required name="last_name" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">RUT</label><input name="document_number" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">Teléfono</label><input name="phone" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">Correo</label><input name="email" type="email" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">Ciudad</label><input name="city" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Dirección</label><input name="address" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Notas</label><input name="notes" class="form-control"></div>
+          </div>
+          <div id="new_customer_feedback" class="small mt-2"></div>
+        </div>
+        <div class="modal-footer py-2">
+          <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-save"></i> Guardar cliente</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const orderForm = document.querySelector('form[action="<?= url('/orders/create') ?>"]');
+    const customerSelect = document.getElementById('customer_id');
+    const customerSearch = document.getElementById('customer_search');
+    const customerPreview = document.getElementById('customer_preview');
+    const newCustomerForm = document.getElementById('new_customer_form');
+    const feedback = document.getElementById('new_customer_feedback');
+
+    if (!orderForm || !customerSelect || !customerPreview) return;
+
+    const renderCustomerPreview = () => {
+      const option = customerSelect.options[customerSelect.selectedIndex];
+      if (!option || !option.value) {
+        customerPreview.innerHTML = '<div class="customer-preview-item text-muted">Selecciona un cliente para ver sus datos.</div>';
+        return;
+      }
+
+      const values = [
+        ['Cliente', `${option.dataset.firstName || ''} ${option.dataset.lastName || ''}`.trim()],
+        ['RUT', option.dataset.document || 'No registrado'],
+        ['Teléfono', option.dataset.phone || 'No registrado'],
+        ['Correo', option.dataset.email || 'No registrado'],
+        ['Ciudad', option.dataset.city || 'No registrada'],
+        ['Dirección', option.dataset.address || 'No registrada'],
+      ];
+
+      customerPreview.innerHTML = values.map(([label, value]) => `<div class="customer-preview-item"><strong>${label}:</strong> ${value}</div>`).join('');
+    };
+
+    customerSearch?.addEventListener('input', () => {
+      const term = customerSearch.value.trim().toLowerCase();
+      Array.from(customerSelect.options).forEach((option, index) => {
+        if (index === 0) return;
+        const text = option.text.toLowerCase();
+        option.hidden = term !== '' && !text.includes(term);
+      });
+    });
+
+    customerSelect.addEventListener('change', renderCustomerPreview);
+
+    orderForm.addEventListener('submit', (event) => {
+      if (!customerSelect.value) {
+        event.preventDefault();
+        alert('Debes seleccionar un cliente registrado o crear uno nuevo.');
+      }
+    });
+
+    if (newCustomerForm) {
+      newCustomerForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        feedback.className = 'small mt-2 text-muted';
+        feedback.textContent = 'Guardando cliente...';
+
+        try {
+          const response = await fetch('<?= url('/orders/customers/create') ?>', {
+            method: 'POST',
+            body: new FormData(newCustomerForm),
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+          });
+          const result = await response.json();
+          if (!response.ok || !result.ok) {
+            throw new Error(result.message || 'No fue posible guardar el cliente.');
+          }
+
+          const customer = result.customer;
+          const option = document.createElement('option');
+          option.value = String(customer.id);
+          option.textContent = `${customer.first_name} ${customer.last_name} | ${customer.document_number || 'Sin RUT'}`;
+          option.dataset.firstName = customer.first_name || '';
+          option.dataset.lastName = customer.last_name || '';
+          option.dataset.document = customer.document_number || '';
+          option.dataset.phone = customer.phone || '';
+          option.dataset.email = customer.email || '';
+          option.dataset.city = customer.city || '';
+          option.dataset.address = customer.address || '';
+
+          customerSelect.appendChild(option);
+          customerSelect.value = option.value;
+          renderCustomerPreview();
+          feedback.className = 'small mt-2 text-success';
+          feedback.textContent = 'Cliente creado correctamente.';
+          newCustomerForm.reset();
+
+          const modalEl = document.getElementById('newCustomerModal');
+          if (window.bootstrap?.Modal && modalEl) {
+            window.bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+          }
+        } catch (error) {
+          feedback.className = 'small mt-2 text-danger';
+          feedback.textContent = error.message || 'Error al guardar cliente.';
+        }
+      });
+    }
+
+    renderCustomerPreview();
+  })();
+</script>
