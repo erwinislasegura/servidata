@@ -79,5 +79,46 @@ $esPos = $coincideRuta('/app/punto-venta', $rutaActual);
     <?php if ($tieneModulo('modulo_usuarios')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/usuarios', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/usuarios')) ?>"><i class="bi bi-people mt-1"></i><span>Usuarios y permisos</span></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_notificaciones')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/notificaciones', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/notificaciones')) ?>"><i class="bi bi-bell mt-1"></i><span>Notificaciones</span></a><?php endif; ?>
     <?php if ($tieneModulo('modulo_historial')): ?><a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/historial', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/historial')) ?>"><i class="bi bi-clock-history mt-1"></i><span>Historial / actividad</span></a><?php endif; ?>
+
+
+    <div class="pt-2 border-top"><div class="text-uppercase text-muted fw-semibold px-2">Servicio técnico</div></div>
+    <a class="nav-link d-flex gap-2 <?= $coincideRuta('/app/servicio-tecnico/dashboard', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/servicio-tecnico/dashboard')) ?>"><i class="bi bi-speedometer2 mt-1"></i><span>Dashboard ST</span></a>
+
+    <button class="nav-link btn text-start d-flex align-items-center gap-2 <?= str_starts_with($rutaActual, '/app/servicio-tecnico/ordenes') ? 'active' : '' ?>" type="button" data-bs-toggle="collapse" data-bs-target="#submenuOperacionST" aria-expanded="true"><i class="bi bi-wrench-adjustable"></i><span>OPERACIÓN</span><i class="bi bi-chevron-down ms-auto"></i></button>
+    <div class="collapse show" id="submenuOperacionST">
+      <a class="nav-link submenu <?= $coincideRuta('/app/servicio-tecnico/ordenes', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/servicio-tecnico/ordenes')) ?>">Nueva Orden / Órdenes</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/servicio-tecnico/ordenes?estado=Listo')) ?>">Entregas</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/servicio-tecnico/ordenes?estado=Diagnóstico')) ?>">Diagnósticos</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/servicio-tecnico/ordenes?estado=Esperando+aprobación')) ?>">Cotizaciones</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/servicio-tecnico/dashboard')) ?>">Caja / Pagos</a>
+    </div>
+
+    <button class="nav-link btn text-start d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#submenuRegistrosST" aria-expanded="true"><i class="bi bi-journal-text"></i><span>REGISTROS</span><i class="bi bi-chevron-down ms-auto"></i></button>
+    <div class="collapse show" id="submenuRegistrosST">
+      <a class="nav-link submenu <?= $coincideRuta('/app/servicio-tecnico/clientes', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/servicio-tecnico/clientes')) ?>">Clientes</a>
+      <a class="nav-link submenu <?= $coincideRuta('/app/servicio-tecnico/equipos', $rutaActual) ? 'active' : '' ?>" href="<?= e(url('/app/servicio-tecnico/equipos')) ?>">Equipos</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/usuarios')) ?>">Técnicos</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/inventario/recepciones')) ?>">Inventario / Repuestos</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/inventario/proveedores')) ?>">Proveedores</a>
+    </div>
+
+    <button class="nav-link btn text-start d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#submenuSeguimientoST" aria-expanded="false"><i class="bi bi-activity"></i><span>SEGUIMIENTO</span><i class="bi bi-chevron-down ms-auto"></i></button>
+    <div class="collapse" id="submenuSeguimientoST">
+      <a class="nav-link submenu" href="<?= e(url('/app/servicio-tecnico/ordenes')) ?>">Estados de Servicio</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/servicio-tecnico/ordenes')) ?>">Historial de Cambios</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/servicio-tecnico/ordenes?estado=Ingresado')) ?>">Servicios Pendientes</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/servicio-tecnico/ordenes?estado=En+reparación')) ?>">Servicios en Proceso</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/servicio-tecnico/ordenes?estado=Listo')) ?>">Servicios Listos</a>
+    </div>
+
+    <button class="nav-link btn text-start d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#submenuAdminST" aria-expanded="false"><i class="bi bi-shield-lock"></i><span>ADMINISTRACIÓN</span><i class="bi bi-chevron-down ms-auto"></i></button>
+    <div class="collapse" id="submenuAdminST">
+      <a class="nav-link submenu" href="<?= e(url('/app/usuarios')) ?>">Usuarios</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/usuarios')) ?>">Roles</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/configuracion')) ?>">Configuración</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/servicio-tecnico/portal-publico')) ?>">Portal Público</a>
+      <a class="nav-link submenu" href="<?= e(url('/app/historial')) ?>">Auditoría</a>
+    </div>
+
   </nav>
 </aside>
