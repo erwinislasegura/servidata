@@ -33,6 +33,17 @@ final class User extends BaseModel
         }
     }
 
+
+    public function updatePasswordById(int $id, string $hashedPassword): void
+    {
+        try {
+            $stmt = $this->db->prepare('UPDATE users SET password=:password, updated_at=NOW() WHERE id=:id');
+            $stmt->execute(['password' => $hashedPassword, 'id' => $id]);
+        } catch (PDOException) {
+            // no-op en modo resiliente
+        }
+    }
+
     public function all(): array
     {
         try {

@@ -23,8 +23,23 @@ final class AuthController extends Controller
             $this->redirect('/login');
         }
 
-        $user = (new User())->findByLogin((string) $this->input('login'));
-        if (!$user || !password_verify((string) $this->input('password'), $user['password'])) {
+        $userModel = new User();
+        $user = $userModel->findByLogin((string) $this->input('login'));
+        $inputPassword = (string) $this->input('password');
+
+        $isValid = false;
+        if ($user) {
+            $storedPassword = (string) ($user['password'] ?? '');
+            $isValid = password_verify($inputPassword, $storedPassword);
+
+            // Compatibilidad con contraseñas en texto plano (migración automática).
+            if (!$isValid && hash_equals($storedPassword, $inputPassword)) {
+                $isValid = true;
+                $userModel->updatePasswordById((int) $user['id'], password_hash($inputPassword, PASSWORD_DEFAULT));
+            }
+        }
+
+        if (!$user || !$isValid) {
             flash('danger', 'Credenciales inválidas.');
             $this->redirect('/login');
         }
